@@ -59,7 +59,7 @@ body {
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
-  color: #777777;
+  color: black;
   text-align: left;
   background-color: #fff;
 }
@@ -158,7 +158,7 @@ a {
 }
 
 a:hover {
-  color: #b38b00;
+  color: green;
   text-decoration: underline;
 }
 
@@ -364,7 +364,7 @@ h1, h2, h3, h4, h5, h6,
   margin-bottom: 0.5rem;
   font-weight: 500;
   line-height: 1.2;
-  color: #0a1026;
+  color: black;
 }
 
 h1, .h1 {
@@ -1882,7 +1882,7 @@ pre code {
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
-  color: #495057;
+  color: black;
   background-color: #fff;
   background-clip: padding-box;
   border: 1px solid #ced4da;
@@ -2139,7 +2139,7 @@ textarea.form-control {
 }
 
 .was-validated .custom-control-input:valid ~ .custom-control-label::before, .custom-control-input.is-valid ~ .custom-control-label::before {
-  border-color: #28a745;
+  border-color: rgb(94, 198, 94);
 }
 
 .was-validated .custom-control-input:valid:checked ~ .custom-control-label::before, .custom-control-input.is-valid:checked ~ .custom-control-label::before {
@@ -2371,19 +2371,19 @@ fieldset:disabled a.btn {
 
 .btn-primary {
   color: #212529;
-  background-color: #FFC600;
-  border-color: #FFC600;
+  background-color: rgb(94, 198, 94);
+  border-color: black;
 }
 
 .btn-primary:hover {
   color: #212529;
-  background-color: #d9a800;
-  border-color: #cc9e00;
+  background-color: rgb(94, 198, 94);
+  border-color: rgb(94, 198, 94);
 }
 
 .btn-primary:focus, .btn-primary.focus {
   color: #212529;
-  background-color: #d9a800;
+  background-color: green;
   border-color: #cc9e00;
   box-shadow: 0 0 0 0.2rem rgba(222, 174, 6, 0.5);
 }
@@ -2858,22 +2858,22 @@ fieldset:disabled a.btn {
 }
 
 .btn-outline-light {
-  color: #F5F5F5;
-  border-color: #F5F5F5;
+  color: white;
+  border-color: white;
 }
 
 .btn-outline-light:hover {
-  color: #212529;
-  background-color: #F5F5F5;
-  border-color: #F5F5F5;
+  color: white;
+  background-color: white;
+  border-color: white;
 }
 
 .btn-outline-light:focus, .btn-outline-light.focus {
-  box-shadow: 0 0 0 0.2rem rgba(245, 245, 245, 0.5);
+  box-shadow: 0 0 0 0.2rem rgba(68, 68, 68, 0.5);
 }
 
 .btn-outline-light.disabled, .btn-outline-light:disabled {
-  color: #F5F5F5;
+  color: white;
   background-color: transparent;
 }
 
@@ -3580,8 +3580,8 @@ input[type="button"].btn-block {
 
 .custom-control-input:checked ~ .custom-control-label::before {
   color: #fff;
-  border-color: #FFC600;
-  background-color: #FFC600;
+  border-color: black;
+  background-color: black;
 }
 
 .custom-control-input:focus ~ .custom-control-label::before {
@@ -4117,8 +4117,8 @@ input[type="button"].btn-block {
 
 .navbar-brand {
   display: inline-block;
-  padding-top: 0.3125rem;
-  padding-bottom: 0.3125rem;
+  padding-top: 20px;
+  padding-bottom: 20px;
   margin-right: 1rem;
   font-size: 1.25rem;
   line-height: inherit;
@@ -6425,7 +6425,7 @@ button.bg-light:focus {
 }
 
 .bg-dark {
-  background-color: #0a1026 !important;
+  background-color: black !important;
 }
 
 a.bg-dark:hover, a.bg-dark:focus,
@@ -9525,7 +9525,7 @@ button.bg-dark:focus {
 }
 
 .text-primary {
-  color: brown !important;
+  color: rgb(94, 198, 94) !important;
   font-size: 30px !important; 
 }
 
@@ -9844,7 +9844,7 @@ h6,
   width: 30px;
   height: 30px;
   border-radius: 100%;
-  background-color: #FFC600;
+  background-color: white;
   opacity: 1;
 }
 
