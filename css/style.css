@@ -10139,3 +10139,132 @@ h6,
   padding: 0;
   list-style-type: none;
 }
+
+/* ============================================
+   Enhanced Image Styling - Bear Carpet Care
+   ============================================ */
+
+/* Base styled image class */
+.img-styled {
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.img-styled:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Service box images */
+.service-box .img-styled {
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  max-height: 200px;
+  object-fit: cover;
+}
+
+/* Content page images (constrained width for better readability) */
+.img-content {
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin: 1.5rem auto;
+  display: block;
+  max-width: 600px;
+  width: 100%;
+}
+
+.img-content:hover {
+  transform: scale(1.01);
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.18);
+}
+
+/* Hero/feature images (larger, more prominent but still constrained) */
+.img-hero {
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+  display: block;
+}
+
+.img-hero:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+}
+
+/* Image gallery grid */
+.img-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.img-gallery .img-styled {
+  margin: 0;
+}
+
+/* Side by side images */
+.img-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin: 1.5rem auto;
+  max-width: 800px;
+  justify-content: center;
+}
+
+.img-row .img-styled {
+  flex: 1 1 250px;
+  max-width: calc(50% - 0.75rem);
+  max-height: 300px;
+  object-fit: cover;
+}
+
+@media (max-width: 768px) {
+  .img-row .img-styled {
+    max-width: 100%;
+    max-height: 250px;
+  }
+
+  .img-content {
+    max-width: 100%;
+  }
+
+  .img-hero {
+    max-width: 100%;
+  }
+
+  .img-styled:hover,
+  .img-content:hover,
+  .img-hero:hover {
+    transform: none;
+  }
+}
+
+/* Subtle border option */
+.img-bordered {
+  border: 3px solid #f0f0f0;
+}
+
+/* Green accent border (matches brand) */
+.img-accent {
+  border: 3px solid #23A036;
+}
+
+/* Caption styling for images */
+.img-caption {
+  text-align: center;
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 0.5rem;
+  font-style: italic;
+}
