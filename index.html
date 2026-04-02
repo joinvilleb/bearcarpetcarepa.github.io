@@ -196,40 +196,73 @@
     <!-- Carousel End -->
 
 <!-- Contact Info Start -->
-<div class="container-fluid pb-5 contact-info" >
-    <div class="row">
-        <div class="col-lg-4 p-0" >
-            <div class="contact-info-item d-flex align-items-center justify-content-center bg-primary text-white py-4 py-lg-0" style="background-color: #e6f2ea !important">
-
-                <i class="fab fa-yelp fa-3x text-secondary mr-4" style="color: blue !important"></i>
-                <div >
-                    <h5 class="mb-2" style="color: white !important"><a href="https://yelp.com">We're on Yelp!</a></h5>
-                    <p class="m-0" style="color: black !important">We serve Central Pennsylvania</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4 p-0">
-            <div class="contact-info-item d-flex align-items-center justify-content-center bg-secondary text-white py-4 py-lg-0" style="background-color: #f9f9f9 !important;">
-                <i class="fab fa-google fa-3x text-primary mr-4" style="color: blue !important;"></i>
-                <div>
-                    <h5 class="mb-2" style="color: black !important"><a href="https://www.google.com/search?num=10&sca_esv=ea7b27f3c7f5bbf6&rlz=1C1JZAP_enUS723US723&sxsrf=AE3TifM0Rj070DF7a74kFKysg-W4DP-Sqw:1749582057018&si=AMgyJEtREmoPL4P1I5IDCfuA8gybfVI2d5Uj7QMwYCZHKDZ-E4thl9MyDszRIy9sYQ5cxarhw3NZ7D8MCldzC_LLor7ZhiHRT3Ppum-A9Ht4KehiDwv9dfdim40UtJAOvsdOLdF7SmA1cYqCjVl6-91Z5kdVDVQrAg%3D%3D&q=Bear+Carpet+Care+Reviews&sa=X&ved=2ahUKEwjKgY6IxeeNAxVjF1kFHcoWK6sQ0bkNegQINxAD&cshid=1749582263702222&biw=1920&bih=919&dpr=1#lrd=0x88416db833030b99:0xbfe992ed7161b58d,3,,,," target="_blank">Leave Us A Review</a></h5>
-                    <p class="m-0" style="color: black !important">Tell us how your service went!
-                        <br>
-                        We're happy you chose us. 
-                    </p>
-                        
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4 p-0">
-            <div class="contact-info-item d-flex align-items-center justify-content-center bg-primary text-white py-4 py-lg-0" style="background-color: #e6f2ea !important">
-
-                <i class="fas fa-phone fa-2x text-secondary mr-4" style="color: blue !important;"></i>
-                <div>
-                    <h5 class="mb-2" style="color: blue !important">Call Us Today!</h5>
-                    <p class="m-0" style="color: black !important"><a href="tel:7174547347">(717) 454-7347</a></p>
-                </div>
-            </div>
+<style>
+.trust-bar {
+    background: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+    border-bottom: 1px solid #e9ecef;
+    padding: 18px 0;
+}
+.trust-bar .trust-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 22px;
+    border-radius: 50px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+.trust-bar .trust-btn i { font-size: 0.95rem; }
+.trust-bar .trust-btn.yelp {
+    background: #fff1f0;
+    color: #d32323;
+    border-color: #fbbcbc;
+}
+.trust-bar .trust-btn.yelp:hover {
+    background: #d32323;
+    color: #fff;
+    border-color: #d32323;
+    text-decoration: none;
+}
+.trust-bar .trust-btn.google {
+    background: #e8f0fe;
+    color: #4285f4;
+    border-color: #b3cefb;
+}
+.trust-bar .trust-btn.google:hover {
+    background: #4285f4;
+    color: #fff;
+    border-color: #4285f4;
+    text-decoration: none;
+}
+.trust-bar .trust-btn.phone {
+    background: #e8f5ea;
+    color: #23A036;
+    border-color: #a8d9ae;
+}
+.trust-bar .trust-btn.phone:hover {
+    background: #23A036;
+    color: #fff;
+    border-color: #23A036;
+    text-decoration: none;
+}
+</style>
+<div class="trust-bar">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-center" style="gap: 12px;">
+            <a href="https://yelp.com" target="_blank" class="trust-btn yelp">
+                <i class="fab fa-yelp"></i> We're on Yelp!
+            </a>
+            <a href="https://www.google.com/search?num=10&sca_esv=ea7b27f3c7f5bbf6&rlz=1C1JZAP_enUS723US723&sxsrf=AE3TifM0Rj070DF7a74kFKysg-W4DP-Sqw:1749582057018&si=AMgyJEtREmoPL4P1I5IDCfuA8gybfVI2d5Uj7QMwYCZHKDZ-E4thl9MyDszRIy9sYQ5cxarhw3NZ7D8MCldzC_LLor7ZhiHRT3Ppum-A9Ht4KehiDwv9dfdim40UtJAOvsdOLdF7SmA1cYqCjVl6-91Z5kdVDVQrAg%3D%3D&q=Bear+Carpet+Care+Reviews&sa=X&ved=2ahUKEwjKgY6IxeeNAxVjF1kFHcoWK6sQ0bkNegQINxAD&cshid=1749582263702222&biw=1920&bih=919&dpr=1#lrd=0x88416db833030b99:0xbfe992ed7161b58d,3,,,," target="_blank" class="trust-btn google">
+                <i class="fab fa-google"></i> Leave Us a Review
+            </a>
+            <a href="tel:7174547347" class="trust-btn phone">
+                <i class="fas fa-phone-alt"></i> Call (717) 454-7347
+            </a>
         </div>
     </div>
 </div>
