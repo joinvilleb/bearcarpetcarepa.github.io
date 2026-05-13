@@ -94,106 +94,74 @@
 
 <body>
 
-    <!-- Header Start -->
-    <div class="container-fluid" style="background-color: white !important;">
-        <div class="row">
-            <div class="col-lg-3 bg-secondary d-none d-lg-block" style="background-color: white !important;">
-                <a href="index.html" class="navbar-brand w-100 h-100 m-0 p-0 d-flex align-items-center justify-content-center" style="background-color: white !important;">
-                 
-                    <img src="img/bearcarpetcare-logo.jpg" alt="Bear Carpet Care Logo" class="img-fluid" style="width: 40%">
-                </a>
-            </div>
-            <div class="col-lg-9">
-                <div class="row bg-dark d-none d-lg-flex">
-                    <div class="col-lg-7 text-left text-white">
-                        <div class="h-100 d-inline-flex align-items-center border-right border-primary py-2 px-3">
-                            <i class="fa fa-envelope text-primary mr-2"></i>
-                            <small>bearcarpetcarepa@gmail.com</small>
-                        </div>
-                        <div class="h-100 d-inline-flex align-items-center py-2 px-2">
-                            <i class="fa fa-phone-alt text-primary mr-2"></i>
-                            <small>(717) 454-7347</small>
-                        </div>
-                    </div>
-                    <div class="col-lg-5 text-right">
-                        <div class="d-inline-flex align-items-center pr-2">
-                            <a class="text-primary p-2" href="#"><i class="fab fa-yelp"></i></a>
-                            <a class="text-primary p-2" href="https://www.google.com/search?num=10&sca_esv=ea7b27f3c7f5bbf6&rlz=1C1JZAP_enUS723US723&sxsrf=AE3TifM0Rj070DF7a74kFKysg-W4DP-Sqw:1749582057018&si=AMgyJEtREmoPL4P1I5IDCfuA8gybfVI2d5Uj7QMwYCZHKDZ-E4thl9MyDszRIy9sYQ5cxarhw3NZ7D8MCldzC_LLor7ZhiHRT3Ppum-A9Ht4KehiDwv9dfdim40UtJAOvsdOLdF7SmA1cYqCjVl6-91Z5kdVDVQrAg%3D%3D&q=Bear+Carpet+Care+Reviews&sa=X&ved=2ahUKEwjKgY6IxeeNAxVjF1kFHcoWK6sQ0bkNegQINxAD&cshid=1749582263702222&biw=1920&bih=919&dpr=1#lrd=0x88416db833030b99:0xbfe992ed7161b58d,3,,,," target="_blank"><i class="fab fa-google"></i></a>
-                            <a class="text-primary p-2" href="https://www.facebook.com/profile.php?id=61577586021295#"><i class="fab fa-facebook"></i></a>
+    <!-- Navbar Start -->
+    <nav class="navbar navbar-expand-lg navbar-light site-navbar">
+        <div class="container-fluid px-4">
+            <a href="index.html" class="navbar-brand site-navbar-brand">
+                <img src="img/bearcarpetcare-logo.jpg" alt="Bear Carpet Care Logo">
+                <span class="site-navbar-name">Bear Carpet Care<small>Harrisburg, PA</small></span>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#siteNavbar" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="siteNavbar">
+                <div class="navbar-nav mx-auto">
+                    <a href="index.html" class="nav-item nav-link active">Home</a>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Services</a>
+                        <div class="dropdown-menu">
+                            <a href="carpet-cleaning.html" class="dropdown-item">Carpet Cleaning</a>
+                            <a href="upholstery-cleaning.html" class="dropdown-item">Upholstery Cleaning</a>
+                            <a href="oriental-rug-cleaning.html" class="dropdown-item">Rug Cleaning</a>
                         </div>
                     </div>
+                    <a href="contact.html" class="nav-item nav-link">Contact</a>
                 </div>
-                <nav class="navbar navbar-expand-lg bg-white navbar-light p-0">
-                    <a href="index.html" class="navbar-brand d-block d-lg-none">
-                        <h1 class="m-0 display-4 text-primary">Bear Carpet Care
-            
-                        </h1>
-
-            
-            
+                <div class="site-navbar-actions d-flex align-items-center">
+                    <a href="tel:7174547347" class="site-navbar-phone d-none d-lg-flex align-items-center mr-3">
+                        <i class="fa fa-phone-alt"></i>(717) 454-7347
                     </a>
-                    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-                        <div class="navbar-nav mr-auto py-0">
-                            <a href="index.html" class="nav-item nav-link active">Home</a>
-                            <a href="carpet-cleaning.html" class="nav-item nav-link">Carpet Cleaning</a>
-                            <a href="upholstery-cleaning.html" class="nav-item nav-link">Upholstery Cleaning</a>
-                            <a href="oriental-rug-cleaning.html" class="nav-item nav-link">Rug Cleaning</a>
-                            <a href="contact.html" class="nav-item nav-link">Contact</a>
-                        </div>
-                        <a href="tel:7174547347" class="btn btn-primary mr-3 d-none d-lg-block">Get A Quote</a>
-                    </div>
-                </nav>
+                    <a href="tel:7174547347" class="btn btn-primary site-navbar-btn">Get A Quote</a>
+                </div>
+                <div class="site-navbar-phone-mobile d-lg-none">
+                    <a href="tel:7174547347"><i class="fa fa-phone-alt"></i>Call (717) 454-7347</a>
+                </div>
             </div>
         </div>
-    </div>
-    <!-- Header End -->
+    </nav>
+    <!-- Navbar End -->
 
-    <!-- Carousel Start -->
-    <div class="container-fluid p-0">
-        <div id="header-carousel" class="carousel slide carousel-fade" data-ride="carousel">
-            <ol class="carousel-indicators">
-                <li data-target="#header-carousel" data-slide-to="0" class="active"></li>
-                <li data-target="#header-carousel" data-slide-to="1"></li>
-                <li data-target="#header-carousel" data-slide-to="2"></li>
-            </ol>
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <img class="img-fluid" src="img/carousel-1.png" alt="Carpet Cleaning" id="carousel-img">
-                    <div class="carousel-caption d-flex align-items-center justify-content-center">
-                        <div class="p-5" style="max-width: 900px;">
-                            <h5 class="text-primary text-uppercase mb-md-3">Carpet Cleaning</h5>
-                            <h1 class="display-3 text-white mb-md-4">Deep Clean, Fresh Feel</h1>
-                            <a href="tel:7174547347" class="btn btn-primary">Get A Quote</a>
-                        </div>
-                    </div>
+    <!-- Hero Start -->
+    <section class="hero-section">
+        <div class="hero-bg"></div>
+        <div class="hero-blob hero-blob-1"></div>
+        <div class="hero-blob hero-blob-2"></div>
+        <div class="hero-overlay"></div>
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-animate hero-animate-1">Harrisburg's Trusted<br>Carpet Cleaning Experts</h1>
+                <p class="hero-subtitle hero-animate hero-animate-2">Professional carpet, upholstery & rug cleaning. 30+ years of experience with eco-friendly, pet-safe methods your family can trust.</p>
+                <div class="hero-ctas hero-animate hero-animate-3">
+                    <a href="tel:7174547347" class="btn btn-primary btn-lg">
+                        <i class="fa fa-phone-alt mr-2"></i>Call (717) 454-7347
+                    </a>
+                    <a href="contact.html" class="btn btn-outline-light btn-lg">Get a Free Quote</a>
                 </div>
-                <div class="carousel-item">
-                    <img class="img-fluid" src="img/carousel-3.png" alt="Upholstery Cleaning" id="carousel-img">
-                    <div class="carousel-caption d-flex align-items-center justify-content-center">
-                        <div class="p-5" style="max-width: 900px;">
-                            <h5 class="text-primary text-uppercase mb-md-3">Upholstery Cleaning</h5>
-                            <h1 class="display-3 text-white mb-md-4">Safe for Family & Pets</h1>
-                            <a href="tel:7174547347" class="btn btn-primary">Get A Quote</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <img class="img-fluid" src="img/carousel-2.png" alt="Rug Cleaning" id="carousel-img">
-                    <div class="carousel-caption d-flex align-items-center justify-content-center" >
-                        <div class="p-5" style="max-width: 900px;">
-                            <h5 class="text-primary text-uppercase mb-md-3">Rug Cleaning</h5>
-                            <h1 class="display-3 text-white mb-md-4">Careful. Reliable. Trusted.</h1>
-                            <a href="tel:7174547347" class="btn btn-primary">Get A Quote</a>
-                        </div>
-                    </div>
+                <div class="hero-trust hero-animate hero-animate-4">
+                    <div class="hero-trust-item"><i class="fa fa-award"></i>30+ Years Experience</div>
+                    <div class="hero-trust-item"><i class="fa fa-leaf"></i>Eco-Friendly</div>
+                    <div class="hero-trust-item"><i class="fa fa-paw"></i>Pet-Safe Methods</div>
+                    <div class="hero-trust-item"><i class="fa fa-star"></i>5-Star Rated</div>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Carousel End -->
+        <div class="hero-wave">
+            <svg viewBox="0 0 1440 65" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill="#ffffff" d="M0,32 C180,65 360,0 540,32 C720,65 900,0 1080,32 C1260,65 1350,16 1440,32 L1440,65 L0,65 Z"/>
+            </svg>
+        </div>
+    </section>
+    <!-- Hero End -->
 
 <!-- Contact Info Start -->
 <style>

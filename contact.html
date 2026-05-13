@@ -27,62 +27,42 @@
 </head>
 
 <body>
-<!-- Header Start -->
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-lg-3 bg-secondary d-none d-lg-block" style="background-color: white !important;">
-            <a href="index.html" class="navbar-brand w-100 h-100 m-0 p-0 d-flex align-items-center justify-content-center" style="background-color: white !important;">
-             
-                <img src="img/bearcarpetcare-logo.jpg" alt="Bear Carpet Care Logo" class="img-fluid" style="width: 40%">
-            </a>
-        </div>
-        <div class="col-lg-9">
-            <div class="row bg-dark d-none d-lg-flex">
-                <div class="col-lg-7 text-left text-white">
-                    <div class="h-100 d-inline-flex align-items-center border-right border-primary py-2 px-3">
-                        <i class="fa fa-envelope text-primary mr-2"></i>
-                        <small>bearcarpetcarepa@gmail.com</small>
-                    </div>
-                    <div class="h-100 d-inline-flex align-items-center py-2 px-2">
-                        <i class="fa fa-phone-alt text-primary mr-2"></i>
-                        <small>(717) 454-7347</small>
-                    </div>
-                </div>
-                <div class="col-lg-5 text-right">
-                    <div class="d-inline-flex align-items-center pr-2">
-                        <a class="text-primary p-2" href="#"><i class="fab fa-yelp"></i></a>
-                        <a class="text-primary p-2" href="https://www.google.com/search?num=10&sca_esv=ea7b27f3c7f5bbf6&rlz=1C1JZAP_enUS723US723&sxsrf=AE3TifM0Rj070DF7a74kFKysg-W4DP-Sqw:1749582057018&si=AMgyJEtREmoPL4P1I5IDCfuA8gybfVI2d5Uj7QMwYCZHKDZ-E4thl9MyDszRIy9sYQ5cxarhw3NZ7D8MCldzC_LLor7ZhiHRT3Ppum-A9Ht4KehiDwv9dfdim40UtJAOvsdOLdF7SmA1cYqCjVl6-91Z5kdVDVQrAg%3D%3D&q=Bear+Carpet+Care+Reviews&sa=X&ved=2ahUKEwjKgY6IxeeNAxVjF1kFHcoWK6sQ0bkNegQINxAD&cshid=1749582263702222&biw=1920&bih=919&dpr=1#lrd=0x88416db833030b99:0xbfe992ed7161b58d,3,,,,"><i class="fab fa-google"></i></a>
-                        <a class="text-primary p-2" href="https://www.facebook.com/profile.php?id=61577586021295#"><i class="fab fa-facebook"></i></a>
+<!-- Navbar Start -->
+<nav class="navbar navbar-expand-lg navbar-light site-navbar">
+    <div class="container-fluid px-4">
+        <a href="index.html" class="navbar-brand site-navbar-brand">
+            <img src="img/bearcarpetcare-logo.jpg" alt="Bear Carpet Care Logo">
+            <span class="site-navbar-name">Bear Carpet Care<small>Harrisburg, PA</small></span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#siteNavbar" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="siteNavbar">
+            <div class="navbar-nav mx-auto">
+                <a href="index.html" class="nav-item nav-link">Home</a>
+                <div class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Services</a>
+                    <div class="dropdown-menu">
+                        <a href="carpet-cleaning.html" class="dropdown-item">Carpet Cleaning</a>
+                        <a href="upholstery-cleaning.html" class="dropdown-item">Upholstery Cleaning</a>
+                        <a href="oriental-rug-cleaning.html" class="dropdown-item">Rug Cleaning</a>
                     </div>
                 </div>
+                <a href="contact.html" class="nav-item nav-link active">Contact</a>
             </div>
-            <nav class="navbar navbar-expand-lg bg-white navbar-light p-0">
-                <a href="index.html" class="navbar-brand d-block d-lg-none">
-                    <h1 class="m-0 display-4 text-primary">Bear Carpet Care</h1>
+            <div class="site-navbar-actions d-flex align-items-center">
+                <a href="tel:7174547347" class="site-navbar-phone d-none d-lg-flex align-items-center mr-3">
+                    <i class="fa fa-phone-alt"></i>(717) 454-7347
                 </a>
-                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-                    <div class="navbar-nav mr-auto py-0">
-                        <a href="index.html" class="nav-item nav-link">Home</a>
-                        <div class="nav-item dropdown">
-                            <a href="#" class="nav-link dropdown-toggle active" data-toggle="dropdown">Services</a>
-                            <div class="dropdown-menu rounded-0 m-0">
-                                <a href="carpet-cleaning.html" class="dropdown-item">Carpet Cleaning</a>
-                                <a href="upholstery-cleaning.html" class="dropdown-item active">Upholstery Cleaning</a>
-                                <a href="oriental-rug-cleaning.html" class="dropdown-item">Oriental Rug Cleaning</a>
-                            </div>
-                        </div>
-                        <a href="contact.html" class="nav-item nav-link">Contact</a>
-                    </div>
-                    <a href="tel:7174547347" class="btn btn-primary mr-3 d-none d-lg-block">Get A Quote</a>
-                </div>
-            </nav>
+                <a href="tel:7174547347" class="btn btn-primary site-navbar-btn">Get A Quote</a>
+            </div>
+            <div class="site-navbar-phone-mobile d-lg-none">
+                <a href="tel:7174547347"><i class="fa fa-phone-alt"></i>Call (717) 454-7347</a>
+            </div>
         </div>
     </div>
-</div>
-<!-- Header End -->
+</nav>
+<!-- Navbar End -->
 
 
     <!-- Page Header Start -->

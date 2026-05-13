@@ -10268,3 +10268,412 @@ h6,
   margin-top: 0.5rem;
   font-style: italic;
 }
+
+/* ============================================
+   Modern Sticky Navbar - Bear Carpet Care
+   ============================================ */
+.site-navbar {
+  background: #fff;
+  padding: 0;
+  position: sticky;
+  top: 0;
+  z-index: 1050;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid #e9ecef;
+}
+
+.site-navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+}
+
+.site-navbar-brand img {
+  height: 110px;
+  width: auto;
+  padding: 8px 0;
+}
+
+.site-navbar-name {
+  font-size: 1.18rem;
+  font-weight: 800;
+  color: #0a1026;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+.site-navbar-name small {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 500;
+  color: #888;
+  letter-spacing: 0.4px;
+  margin-top: 2px;
+}
+
+.site-navbar .navbar-nav .nav-link {
+  color: #333 !important;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 22px 18px !important;
+  transition: color 0.2s;
+  letter-spacing: 0.2px;
+  position: relative;
+}
+
+.site-navbar .navbar-nav .nav-link:hover {
+  color: #0066ff !important;
+}
+
+.site-navbar .navbar-nav .nav-link.active {
+  color: #0066ff !important;
+}
+
+.site-navbar .navbar-nav .nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 18px;
+  right: 18px;
+  height: 3px;
+  background: #0066ff;
+  border-radius: 3px 3px 0 0;
+}
+
+.site-navbar .dropdown-menu {
+  background: #fff;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 8px 0;
+  margin-top: 0;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.site-navbar .dropdown-item {
+  color: #444;
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.15s;
+}
+
+.site-navbar .dropdown-item:hover {
+  background: rgba(0, 102, 255, 0.06);
+  color: #0066ff;
+}
+
+.site-navbar .dropdown-item.active,
+.site-navbar .dropdown-item:active {
+  background: rgba(0, 102, 255, 0.1);
+  color: #0066ff;
+}
+
+.site-navbar .navbar-toggler {
+  border-color: #ccc;
+  margin: 10px 0;
+  padding: 6px 10px;
+}
+
+.site-navbar-actions {
+  gap: 12px;
+}
+
+.site-navbar-phone {
+  color: #444;
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.site-navbar-phone:hover {
+  color: #0066ff;
+  text-decoration: none;
+}
+
+.site-navbar-btn {
+  padding: 9px 22px !important;
+  font-size: 0.88rem !important;
+  font-weight: 600 !important;
+  border-radius: 6px !important;
+  white-space: nowrap;
+}
+
+.site-navbar-phone-mobile {
+  border-top: 1px solid #e9ecef;
+  margin-top: 6px;
+  padding: 14px 16px;
+}
+
+.site-navbar-phone-mobile a {
+  color: #333;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.site-navbar-phone-mobile a:hover {
+  color: #0066ff;
+}
+
+@media (max-width: 991px) {
+  .site-navbar .navbar-nav .nav-link {
+    padding: 10px 16px !important;
+  }
+
+  .site-navbar .navbar-nav .nav-link.active::after {
+    display: none;
+  }
+
+  .site-navbar .dropdown-menu {
+    background: #f8f9fa;
+    border: none;
+    box-shadow: none;
+    padding: 0 0 0 12px;
+    margin: 0;
+  }
+
+  .site-navbar .dropdown-item {
+    color: #555;
+    padding: 8px 16px;
+  }
+}
+
+/* ============================================
+   Modern Hero Section - Bear Carpet Care
+   ============================================ */
+.hero-section {
+  position: relative;
+  min-height: 640px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background-image: url('../img/carousel-1.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  animation: kenBurns 22s ease-in-out infinite alternate;
+}
+
+.hero-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.22;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.hero-blob-1 {
+  width: 560px;
+  height: 560px;
+  background: radial-gradient(circle, #0066ff, #0044cc);
+  top: -140px;
+  right: -100px;
+  animation: floatBlob1 15s ease-in-out infinite;
+}
+
+.hero-blob-2 {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, #0099ff, #0055cc);
+  bottom: 0;
+  left: 8%;
+  animation: floatBlob2 19s ease-in-out infinite;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, rgba(10, 16, 38, 0.9) 0%, rgba(0, 40, 130, 0.45) 100%);
+  z-index: 2;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 3;
+  max-width: 720px;
+  padding: 72px 0 110px;
+}
+
+.hero-content h1 {
+  font-size: 3.3rem;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.14;
+  margin-bottom: 20px;
+}
+
+.hero-subtitle {
+  font-size: 1.05rem;
+  color: rgba(255, 255, 255, 0.78);
+  margin-bottom: 38px;
+  line-height: 1.72;
+  max-width: 580px;
+}
+
+.hero-ctas {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 46px;
+}
+
+.hero-ctas .btn {
+  padding: 15px 32px;
+  font-size: 0.97rem;
+  font-weight: 700;
+  border-radius: 6px;
+  letter-spacing: 0.3px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.hero-ctas .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+.hero-ctas .btn-primary {
+  animation: ctaPulse 3.5s ease-in-out 1.8s infinite;
+}
+
+.hero-trust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 26px;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  padding-top: 30px;
+}
+
+.hero-trust-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.hero-trust-item i {
+  color: #3d8eff;
+  font-size: 1.05rem;
+  width: 16px;
+  text-align: center;
+}
+
+.hero-wave {
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  line-height: 0;
+  z-index: 4;
+}
+
+.hero-wave svg {
+  width: 100%;
+  height: 65px;
+  display: block;
+}
+
+/* Staggered fade-up entrance */
+.hero-animate {
+  opacity: 0;
+  animation: heroFadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.hero-animate-1 { animation-delay: 0.1s; }
+.hero-animate-2 { animation-delay: 0.35s; }
+.hero-animate-3 { animation-delay: 0.6s; }
+.hero-animate-4 { animation-delay: 0.85s; }
+
+@keyframes heroFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes kenBurns {
+  from { transform: scale(1); }
+  to   { transform: scale(1.09); }
+}
+
+@keyframes floatBlob1 {
+  0%, 100% { transform: translate(0, 0); }
+  33%       { transform: translate(30px, -22px); }
+  66%       { transform: translate(-18px, 16px); }
+}
+
+@keyframes floatBlob2 {
+  0%, 100% { transform: translate(0, 0); }
+  33%       { transform: translate(-22px, 18px); }
+  66%       { transform: translate(18px, -12px); }
+}
+
+@keyframes ctaPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0, 102, 255, 0.5); }
+  50%       { box-shadow: 0 0 0 14px rgba(0, 102, 255, 0); }
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    min-height: 560px;
+  }
+
+  .hero-content {
+    padding: 48px 0 100px;
+  }
+
+  .hero-content h1 {
+    font-size: 2.1rem;
+  }
+
+  .hero-trust {
+    gap: 16px;
+  }
+
+  .hero-blob-1 {
+    width: 320px;
+    height: 320px;
+  }
+
+  .hero-blob-2 {
+    width: 240px;
+    height: 240px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-content h1 {
+    font-size: 1.8rem;
+  }
+
+  .hero-ctas {
+    flex-direction: column;
+  }
+
+  .hero-ctas .btn {
+    width: 100%;
+    text-align: center;
+    padding: 14px 22px;
+  }
+}
