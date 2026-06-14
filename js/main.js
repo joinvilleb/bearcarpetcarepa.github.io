@@ -137,6 +137,10 @@
         items: 1,
         loop: true,
     });
-    
+
+    // Dynamic copyright year
+    var yearEl = document.getElementById('copy-year');
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
+
 })(jQuery);
 
