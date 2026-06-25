@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /Mockup/
+Disallow: /mail/
 
 Sitemap: https://bearcarpetcare.com/sitemap.xml

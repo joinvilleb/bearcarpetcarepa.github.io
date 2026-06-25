@@ -61,11 +61,32 @@
     {
         "@context": "https://schema.org",
         "@type": "LocalBusiness",
+        "@id": "https://bearcarpetcare.com/#business",
         "name": "Bear Carpet Care",
-        "telephone": "(717) 454-7347",
+        "telephone": "+1-717-454-7347",
         "email": "bearcarpetcarepa@gmail.com",
         "url": "https://bearcarpetcare.com",
         "image": "https://bearcarpetcare.com/img/bearcarpetcare-logo.jpg",
+        "logo": "https://bearcarpetcare.com/img/bearcarpetcare-logo.jpg",
+        "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Harrisburg",
+            "addressRegion": "PA",
+            "addressCountry": "US"
+        },
+        "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 40.2732,
+            "longitude": -76.8867
+        },
+        "areaServed": [
+            {"@type": "City", "name": "Harrisburg"},
+            {"@type": "City", "name": "York"},
+            {"@type": "City", "name": "Lancaster"},
+            {"@type": "City", "name": "Lebanon"},
+            {"@type": "City", "name": "Hershey"},
+            {"@type": "AdministrativeArea", "name": "Central Pennsylvania"}
+        ],
         "openingHoursSpecification": [
             {"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "08:00", "closes": "19:00"},
             {"@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "10:00", "closes": "17:00"},
