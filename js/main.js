@@ -140,6 +140,23 @@
   }
 
   /* ---------------------------------------------------------------
+   * Hide the sticky call bar once the footer is on screen. By then the
+   * phone number and email are visible in the footer itself, so the bar
+   * is just covering content — including, at some scroll positions, the
+   * footer text it sits on top of.
+   * ------------------------------------------------------------- */
+  var callbar = document.querySelector('.callbar');
+  var siteFooter = document.querySelector('.site-footer');
+
+  if (callbar && siteFooter && 'IntersectionObserver' in window) {
+    new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        callbar.classList.toggle('callbar-hidden', entry.isIntersecting);
+      });
+    }, { rootMargin: '0px 0px -40px 0px' }).observe(siteFooter);
+  }
+
+  /* ---------------------------------------------------------------
    * Google Maps facade — the embed only loads once the user asks for
    * it, keeping ~900KB of third-party JS off the critical path.
    * ------------------------------------------------------------- */

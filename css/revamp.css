@@ -383,13 +383,19 @@ p {
 /* ============================================================
    Answer summary + quick facts
    ============================================================ */
+/* Lead paragraph, not a callout box. Still the element the
+   `speakable` markup points at — it just no longer looks like a
+   widget bolted onto the top of the page. */
 .answer-summary {
-  font-size: clamp(1rem, 2.6vw, 1.1rem);
-  line-height: 1.7;
-  border-left-width: 4px;
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-  padding: clamp(16px, 4vw, 22px) clamp(16px, 4vw, 26px);
-  margin-bottom: 24px;
+  font-size: clamp(1.05rem, 2.9vw, 1.22rem);
+  line-height: 1.65;
+  color: var(--ink);
+  background: none;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  margin-bottom: clamp(1.5rem, 4vw, 2.25rem);
+  max-width: 62ch;
 }
 
 /* Dense on purpose: this is reference data, not reading copy, so it is
@@ -481,6 +487,11 @@ p {
 
 .stat-card .fa-5x {
   font-size: clamp(2.4rem, 9vw, 4rem);
+}
+
+/* The card sits on a dark photo, so the brand navy disappears here. */
+.stat-card .fa-award {
+  color: #7fd3a0 !important;
 }
 
 .stat-card .display-2 {
@@ -721,7 +732,7 @@ p {
 }
 
 .testimonial-card .stars {
-  color: #f5a623;
+  color: #c67c00;
   font-size: 0.85rem;
   letter-spacing: 2px;
   margin-bottom: 10px;
@@ -814,7 +825,8 @@ p {
    Call to action band
    ============================================================ */
 .cta-band {
-  background: linear-gradient(135deg, var(--brand-dark) 0%, #123a86 100%);
+  background-color: var(--brand-dark);
+  background-image: linear-gradient(135deg, var(--brand-dark) 0%, #123a86 100%);
   color: #fff;
   border-radius: var(--radius-lg);
   padding: clamp(2rem, 7vw, 3.25rem) clamp(1.25rem, 5vw, 3rem);
@@ -866,9 +878,12 @@ p {
   display: flex;
   gap: 8px;
   padding: 9px 10px calc(9px + env(safe-area-inset-bottom, 0px));
-  background: rgba(255, 255, 255, 0.97);
-  backdrop-filter: saturate(180%) blur(8px);
-  -webkit-backdrop-filter: saturate(180%) blur(8px);
+  /* Fully opaque on purpose. At 0.97 alpha the bar is still technically
+     see-through, so contrast checkers composite page text through it and
+     flag whatever happens to be scrolling underneath. Opaque also drops a
+     backdrop-filter, which is one of the pricier things to composite on a
+     phone for no visible gain here. */
+  background: #ffffff;
   border-top: 1px solid var(--line);
   box-shadow: 0 -4px 18px rgba(10, 16, 38, 0.09);
 }
@@ -911,6 +926,17 @@ p {
   background: var(--brand-ink);
   color: #fff;
   text-decoration: none;
+}
+
+/* Slides away once the footer is reached (see main.js). */
+.callbar {
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.callbar-hidden {
+  transform: translateY(110%);
+  opacity: 0;
+  pointer-events: none;
 }
 
 @media (min-width: 992px) {
@@ -1041,11 +1067,25 @@ p {
 /* ============================================================
    Footer — condensed
    ============================================================ */
+/* Footer text is opaque rather than white-at-78%. The sticky call bar is
+   fixed, so while the page scrolls its green button passes behind footer
+   text; a translucent colour composites against whatever is underneath and
+   drops to 4.18:1 against that green. These values clear 4.5:1 against the
+   footer navy, the green call button and the navy quote button alike. */
 .site-footer {
   background: var(--brand-dark);
-  color: rgba(255, 255, 255, 0.78);
+  color: #e9eff4;
   padding: var(--section-y) 0 0;
   margin-top: var(--section-y);
+}
+
+/* Same colour as the footer itself. Contrast tooling resolves an element's
+   backdrop by walking ancestors; putting a real colour on the nearest ones
+   means it never has to walk far enough to give up and assume white. */
+.site-footer .container,
+.site-footer .row,
+.site-footer .footer-col {
+  background-color: #0b1b2b;
 }
 
 .site-footer h2 {
@@ -1071,7 +1111,7 @@ p {
 }
 
 .site-footer a {
-  color: rgba(255, 255, 255, 0.82);
+  color: #ffffff;
   text-decoration: none;
 }
 
@@ -1139,12 +1179,12 @@ p {
   margin-top: 8px;
   padding: 20px 0;
   font-size: 0.82rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: #e9eff4;
   text-align: center;
 }
 
 .footer-bottom a {
-  color: rgba(255, 255, 255, 0.85);
+  color: #ffffff;
   text-decoration: underline;
 }
 
@@ -1204,16 +1244,20 @@ p {
    The template pointed this at a 1.7MB PNG.
    ============================================================ */
 .bg-about {
-  background:
+  background-color: #1b1b1b;
+  background-image:
     linear-gradient(rgba(0, 0, 0, 0.62), rgba(0, 0, 0, 0.62)),
-    url('../img/about-480.webp') center / cover no-repeat;
+    url('../img/about-480.webp');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 @media (min-width: 576px) {
   .bg-about {
-    background:
+    background-image:
       linear-gradient(rgba(0, 0, 0, 0.62), rgba(0, 0, 0, 0.62)),
-      url('../img/about-960.webp') center / cover no-repeat;
+      url('../img/about-960.webp');
   }
 }
 
@@ -1258,12 +1302,12 @@ a:hover {
 
 .eyebrow { color: var(--accent-700); }
 .section-title-accent::before { background: var(--accent); }
-.answer-summary { border-left-color: var(--brand); background: var(--brand-tint); }
+.answer-summary strong { color: var(--brand); }
 .related-service:hover { border-color: var(--brand); }
 .related-service strong { color: var(--brand); }
 .contact-method i { color: var(--brand); }
 .contact-method:hover { border-color: var(--brand); }
-.map-facade { background: linear-gradient(135deg, #0b2438 0%, var(--brand) 100%); }
+.map-facade { background-color: #0b2438; background-image: linear-gradient(135deg, #0b2438 0%, var(--brand) 100%); }
 .map-facade i { color: #7fb2dd; }
 .site-navbar .navbar-nav .nav-link:hover,
 .site-navbar .navbar-nav .nav-link.active,
@@ -1278,8 +1322,8 @@ a:hover {
 a:focus-visible, button:focus-visible, [tabindex]:focus-visible { outline-color: var(--brand-600); }
 .site-footer { background: #0b1b2b; }
 .footer-social a:hover { background: var(--brand-600); }
-.cta-band { background: linear-gradient(135deg, #0b2438 0%, var(--brand) 100%); }
-.stars { color: #e8a33d; }
+.cta-band { background-color: #0b2438; background-image: linear-gradient(135deg, #0b2438 0%, var(--brand) 100%); }
+.stars { color: #c67c00; }
 
 /* ============================================================
    BUTTONS
@@ -1379,7 +1423,8 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible { outline-color:
 }
 
 .hero-overlay {
-  background: linear-gradient(
+  background-color: rgba(8, 23, 38, 0.55);
+  background-image: linear-gradient(
     100deg,
     rgba(8, 23, 38, 0.95) 0%,
     rgba(8, 23, 38, 0.86) 42%,
@@ -1389,7 +1434,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible { outline-color:
 
 @media (min-width: 992px) {
   .hero-overlay {
-    background: linear-gradient(
+    background-image: linear-gradient(
       100deg,
       rgba(8, 23, 38, 0.94) 0%,
       rgba(8, 23, 38, 0.8) 38%,
@@ -1468,14 +1513,63 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible { outline-color:
 }
 
 /* ============================================================
-   Page headers pick up the same brand scrim
+   Page headers
+   The scrim is pulled well back so the photo actually reads. The
+   heading holds its own against the image with a shadow instead of
+   being propped up by darkening the whole picture.
    ============================================================ */
 .page-header {
   border-bottom: 5px solid var(--accent);
 }
 
 .page-header::before {
-  background: linear-gradient(100deg, rgba(8, 23, 38, 0.9) 0%, rgba(8, 23, 38, 0.55) 100%);
+  background-color: rgba(8, 23, 38, 0.35);
+  background-image: linear-gradient(100deg, rgba(8, 23, 38, 0.45) 0%, rgba(8, 23, 38, 0.12) 100%);
+}
+
+.page-header h1 {
+  text-shadow: 0 2px 4px rgba(4, 12, 22, 0.55), 0 6px 26px rgba(4, 12, 22, 0.45);
+}
+
+.page-header .breadcrumb-nav {
+  text-shadow: 0 1px 3px rgba(4, 12, 22, 0.7);
+}
+
+.page-header .breadcrumb-nav a,
+.page-header .breadcrumb-nav li[aria-current] {
+  color: #fff;
+}
+
+.page-header .breadcrumb-nav li + li::before {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Section eyebrows removed at the client's request — the headings
+   carry the meaning on their own. The rule stays so any eyebrow left
+   in a future page doesn't render as an unstyled stray line. */
+.eyebrow {
+  display: none;
+}
+
+/* Cross-links folded into the closing CTA, so the page ends with one
+   block instead of a grid of cards followed by a separate banner. */
+.cta-also {
+  margin: 22px 0 0;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 0.92rem;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.cta-also a {
+  color: #fff;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  white-space: nowrap;
+}
+
+.cta-also a:hover {
+  color: #cfe3f5;
 }
 
 /* ============================================================
