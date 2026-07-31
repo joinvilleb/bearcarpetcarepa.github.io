@@ -242,38 +242,8 @@ p {
   }
 
   .site-navbar-actions .site-navbar-btn {
-    width: 100%;
-    text-align: center;
-    padding: 14px 22px !important;
+    padding: 13px 24px !important;
   }
-}
-
-/* ============================================================
-   Hero
-   ============================================================ */
-.hero-section {
-  min-height: 0;
-  padding-top: clamp(2.5rem, 9vw, 4.5rem);
-  padding-bottom: clamp(4rem, 12vw, 6.5rem);
-}
-
-.hero-content {
-  padding: 0;
-  max-width: 640px;
-}
-
-.hero-content h1 {
-  font-size: clamp(2rem, 7.4vw, 3.3rem);
-  font-weight: 800;
-  letter-spacing: -0.025em;
-  margin-bottom: 14px;
-}
-
-.hero-subtitle {
-  font-size: clamp(0.98rem, 2.6vw, 1.08rem);
-  line-height: 1.65;
-  margin-bottom: 26px;
-  color: rgba(255, 255, 255, 0.86);
 }
 
 .hero-ctas {
@@ -289,34 +259,10 @@ p {
   justify-content: center;
 }
 
-/* Two-up trust chips instead of a ragged four-across wrap. */
-.hero-trust {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px 18px;
-  padding-top: 22px;
-}
-
-.hero-trust-item {
-  font-size: 0.8rem;
-  gap: 8px;
-}
-
-@media (min-width: 768px) {
-  .hero-trust {
-    display: flex;
-    gap: 26px;
-  }
-}
-
-@media (max-width: 575.98px) {
-  .hero-ctas {
-    flex-direction: column;
-  }
-
-  .hero-ctas .btn {
-    width: 100%;
-  }
+/* Buttons hug their label rather than stretching edge to edge. Full-bleed
+   blocks were the single most template-looking thing on the page. */
+.btn {
+  width: auto;
 }
 
 /* ============================================================
@@ -858,11 +804,7 @@ p {
   justify-content: center;
 }
 
-@media (max-width: 575.98px) {
-  .cta-actions .btn {
-    width: 100%;
-  }
-}
+
 
 /* ============================================================
    Sticky call bar (mobile only)
@@ -1003,6 +945,10 @@ p {
 .contact-form .btn {
   border-radius: 10px;
   min-height: 54px;
+  width: auto;
+  display: inline-flex;
+  padding-left: 34px !important;
+  padding-right: 34px !important;
 }
 
 .help-block {
@@ -1383,6 +1329,21 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible { outline-color:
   border-color: #fff;
 }
 
+/* Secondary action on a light ground. */
+.btn-outline-brand {
+  background: #fff;
+  border-color: #c2d2e0;
+  color: var(--brand);
+}
+
+.btn-outline-brand:hover,
+.btn-outline-brand:focus {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(13, 70, 113, 0.22);
+}
+
 .btn-light {
   background: #fff;
   border-color: #fff;
@@ -1398,118 +1359,6 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible { outline-color:
 
 .site-navbar-btn {
   border-radius: 8px !important;
-}
-
-/* ============================================================
-   HERO
-   Out: blurred floating gradient blobs, a wave divider and a slow
-   Ken Burns pan — the stock "AI landing page" kit. In: the actual
-   photo of the work, a directional scrim so the type stays legible
-   over it, and the phone number as the loudest thing on screen.
-   ============================================================ */
-.hero-blob,
-.hero-wave {
-  display: none;
-}
-
-.hero-bg {
-  animation: none;
-}
-
-.hero-section {
-  padding-top: clamp(2.25rem, 8vw, 5rem);
-  padding-bottom: clamp(2.5rem, 8vw, 5rem);
-  border-bottom: 5px solid var(--accent);
-}
-
-.hero-overlay {
-  background-color: rgba(8, 23, 38, 0.55);
-  background-image: linear-gradient(
-    100deg,
-    rgba(8, 23, 38, 0.95) 0%,
-    rgba(8, 23, 38, 0.86) 42%,
-    rgba(8, 23, 38, 0.5) 100%
-  );
-}
-
-@media (min-width: 992px) {
-  .hero-overlay {
-    background-image: linear-gradient(
-      100deg,
-      rgba(8, 23, 38, 0.94) 0%,
-      rgba(8, 23, 38, 0.8) 38%,
-      rgba(8, 23, 38, 0.18) 100%
-    );
-  }
-}
-
-.hero-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  color: #fff;
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  padding: 7px 15px;
-  border-radius: 999px;
-  margin-bottom: 16px;
-  white-space: nowrap;
-}
-
-.hero-badge i {
-  color: #7fd3a0;
-}
-
-.hero-content h1 {
-  letter-spacing: -0.03em;
-}
-
-.hero-phone {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 10px;
-  color: #fff;
-  font-size: clamp(1.5rem, 5.6vw, 2.1rem);
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  text-decoration: none;
-  margin-bottom: 6px;
-}
-
-.hero-phone:hover,
-.hero-phone:focus {
-  color: #fff;
-  text-decoration: underline;
-}
-
-.hero-phone small {
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.62);
-}
-
-/* Trust row: ticks, not floating icons. */
-.hero-trust {
-  border-top: 1px solid rgba(255, 255, 255, 0.16);
-  padding-top: 20px;
-  gap: 10px 20px;
-}
-
-.hero-trust-item {
-  font-size: 0.83rem;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.92);
-}
-
-.hero-trust-item i {
-  color: #7fd3a0;
-  font-size: 0.92rem;
-  flex: 0 0 auto;
 }
 
 /* ============================================================
@@ -1568,4 +1417,147 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible { outline-color:
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+/* ============================================================
+   HERO, take two: light instead of dark
+   A cleaning company should look bright. The dark photo-with-scrim
+   treatment hid the work behind a wash of navy and read like every
+   agency landing page; here the copy sits on a light ground and the
+   photo is shown properly, at full contrast, beside it.
+   ============================================================ */
+.hero {
+  background: linear-gradient(180deg, #ffffff 0%, var(--brand-tint) 100%);
+  border-bottom: 1px solid var(--line);
+  padding-top: clamp(1.75rem, 5vw, 3.5rem);
+  padding-bottom: clamp(2rem, 5vw, 3.5rem);
+}
+
+.hero-grid {
+  display: grid;
+  gap: clamp(1.75rem, 4vw, 3.5rem);
+  align-items: center;
+}
+
+@media (min-width: 992px) {
+  .hero-grid {
+    grid-template-columns: 1.05fr 1fr;
+  }
+}
+
+.hero-copy h1 {
+  color: var(--brand-dark);
+  font-size: clamp(2.05rem, 6.4vw, 3.15rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.08;
+  margin-bottom: 16px;
+  max-width: 15ch;
+}
+
+.hero-lead {
+  color: var(--muted);
+  font-size: clamp(1rem, 2.6vw, 1.14rem);
+  line-height: 1.65;
+  max-width: 46ch;
+  margin-bottom: 26px;
+}
+
+.hero-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+/* Ticks read as a checklist of facts, not a row of floating icons. */
+.hero-ticks {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 20px;
+  margin: 0;
+  padding: 22px 0 0;
+  border-top: 1px solid var(--line);
+}
+
+.hero-ticks li {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--brand-dark);
+  line-height: 1.35;
+}
+
+.hero-ticks li::before {
+  content: "";
+  flex: 0 0 17px;
+  height: 17px;
+  margin-top: 1px;
+  border-radius: 50%;
+  background: var(--accent-tint);
+  box-shadow: inset 0 0 0 1.5px var(--accent);
+  -webkit-mask: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5' fill='none' stroke='%23016036' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-size: 12px 12px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.hero-media img {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 10px 24px rgba(13, 70, 113, 0.13), 0 30px 60px rgba(13, 70, 113, 0.11);
+}
+
+@media (max-width: 991.98px) {
+  /* Photo first on a phone: it says what the business does before any
+     text is read, and it keeps the fold from being a wall of words. */
+  .hero-grid {
+    gap: 1.5rem;
+  }
+
+  .hero-media {
+    order: -1;
+  }
+
+  .hero-media img {
+    aspect-ratio: 16 / 10;
+  }
+}
+
+@media (min-width: 400px) {
+  .hero-ticks {
+    gap: 12px 24px;
+  }
+}
+
+/* ============================================================
+   Motion
+   The staggered fade-up entrance was the loudest "generated page"
+   signal on the site. Nothing on load now; hover and focus feedback
+   stays, because that responds to the visitor rather than performing
+   at them.
+   ============================================================ */
+.hero-ctas .btn {
+  animation: none;
+}
+
+/* The template stacks and stretches the hero buttons under 480px via
+   `.hero-ctas .btn { width: 100% }`. That out-specifies a bare `.btn`
+   rule, so the override has to match its weight. */
+.hero-ctas {
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.hero-ctas .btn,
+.cta-actions .btn {
+  width: auto;
+  padding-left: 26px;
+  padding-right: 26px;
 }

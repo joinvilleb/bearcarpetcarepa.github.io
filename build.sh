@@ -26,10 +26,14 @@ SAFELIST=(
 )
 
 echo "→ purging css/style.css against the HTML"
+# --keyframes drops @keyframes nothing animates any more (the template's
+# hero fade-up, Ken Burns pan and floating blobs). Safe because neither
+# revamp.css nor icons.css declares an animation.
 npx --yes purgecss \
   --css css/style.css \
   --content '*.html' 'js/*.js' \
   --safelist "${SAFELIST[@]}" \
+  --keyframes \
   --output "$TMP/"
 
 echo "→ concatenating purged base + icons + revamp"

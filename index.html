@@ -41,8 +41,9 @@
 
     <!-- Critical assets the LCP depends on -->
     <link rel="preload" href="fonts/raleway-latin-var.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" as="image" href="img/hero-960.webp" media="(max-width: 991px)" fetchpriority="high">
-    <link rel="preload" as="image" href="img/hero-1920.webp" media="(min-width: 992px)" fetchpriority="high">
+    <link rel="preload" as="image" href="img/hero-card-800.webp"
+          imagesrcset="img/hero-card-560.webp 560w, img/hero-card-800.webp 800w, img/hero-card-1050.webp 1050w"
+          imagesizes="(min-width: 992px) 46vw, 100vw" fetchpriority="high">
 
     <link rel="stylesheet" href="css/site.min.css">
 
@@ -138,7 +139,7 @@
           "dateModified": "2026-07-31",
           "speakable": {
             "@type": "SpeakableSpecification",
-            "cssSelector": [".hero-content h1", ".answer-summary"]
+            "cssSelector": [".hero-copy h1", ".answer-summary"]
           },
           "mainEntity": [
             {
@@ -219,26 +220,34 @@
 <main id="main">
 
     <!-- Hero Start -->
-    <section class="hero-section">
-        <div class="hero-bg"></div>
-        <div class="hero-overlay"></div>
+    <section class="hero">
         <div class="container">
-            <div class="hero-content">
-                <h1 class="hero-animate hero-animate-1">Carpets, Furniture &amp; Rugs, Deep Cleaned</h1>
-                <p class="hero-subtitle hero-animate hero-animate-2">Steam cleaning that pulls out the dirt your vacuum leaves behind. Non-toxic and safe around kids and pets. Free quotes, no obligation.</p>
+            <div class="hero-grid">
+                <div class="hero-copy">
+                    <h1>Carpets, furniture and rugs, deep cleaned</h1>
+                    <p class="hero-lead">Steam cleaning that pulls out the dirt your vacuum leaves behind. Non-toxic and safe around kids and pets. Free quotes, no obligation.</p>
 
-                <div class="hero-ctas hero-animate hero-animate-3">
-                    <a href="tel:+17174547347" class="btn btn-call btn-lg">
-                        <i class="fa fa-phone-alt mr-2" aria-hidden="true"></i>Call (717) 454-7347
-                    </a>
-                    <a href="contact.html" class="btn btn-outline-light btn-lg">Get a Free Quote</a>
+                    <div class="hero-ctas">
+                        <a href="tel:+17174547347" class="btn btn-call btn-lg">
+                            <i class="fa fa-phone-alt mr-2" aria-hidden="true"></i>Call (717) 454-7347
+                        </a>
+                        <a href="contact.html" class="btn btn-outline-brand btn-lg">Get a Free Quote</a>
+                    </div>
+
+                    <ul class="hero-ticks">
+                        <li>30+ years experience</li>
+                        <li>Safe for pets &amp; kids</li>
+                        <li>Non-toxic products</li>
+                        <li>Free quotes</li>
+                    </ul>
                 </div>
 
-                <div class="hero-trust hero-animate hero-animate-4">
-                    <div class="hero-trust-item"><i class="fa fa-award" aria-hidden="true"></i>30+ years experience</div>
-                    <div class="hero-trust-item"><i class="fa fa-paw" aria-hidden="true"></i>Safe for pets &amp; kids</div>
-                    <div class="hero-trust-item"><i class="fa fa-leaf" aria-hidden="true"></i>Non-toxic products</div>
-                    <div class="hero-trust-item"><i class="fa fa-star" aria-hidden="true"></i>Free quotes</div>
+                <div class="hero-media">
+                    <img src="img/hero-card-800.webp"
+                         srcset="img/hero-card-560.webp 560w, img/hero-card-800.webp 800w, img/hero-card-1050.webp 1050w"
+                         sizes="(min-width: 992px) 46vw, 100vw"
+                         alt="Bear Carpet Care cleaning an oriental rug at their Harrisburg, PA facility"
+                         width="800" height="533" fetchpriority="high" decoding="async">
                 </div>
             </div>
         </div>
