@@ -1551,27 +1551,6 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible { outline-color:
   display: none;
 }
 
-/* Cross-links folded into the closing CTA, so the page ends with one
-   block instead of a grid of cards followed by a separate banner. */
-.cta-also {
-  margin: 22px 0 0;
-  padding-top: 18px;
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
-  font-size: 0.92rem;
-  color: rgba(255, 255, 255, 0.75);
-}
-
-.cta-also a {
-  color: #fff;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  white-space: nowrap;
-}
-
-.cta-also a:hover {
-  color: #cfe3f5;
-}
-
 /* ============================================================
    Utility
    ============================================================ */
