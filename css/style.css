@@ -10688,3 +10688,414 @@ h2 {
     padding: 14px 22px;
   }
 }
+
+/* ============================================================
+   Performance & accessibility layer
+   Appended last so these rules win over the equivalents above.
+   ============================================================ */
+
+/* --- Self-hosted Raleway ------------------------------------
+   Was: two render-blocking requests to fonts.googleapis.com +
+   fonts.gstatic.com pulling 9 static files, 5 of them Poppins,
+   which no rule in this stylesheet ever referenced.
+   Now: one variable font per style, latin subset, same origin. */
+@font-face {
+  font-family: 'Raleway';
+  font-style: normal;
+  font-weight: 300 800;
+  font-display: swap;
+  src: url('../fonts/raleway-latin-var.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+                 U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122,
+                 U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Raleway';
+  font-style: italic;
+  font-weight: 300 800;
+  font-display: swap;
+  src: url('../fonts/raleway-latin-italic-var.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+                 U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122,
+                 U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* --- Hero background: WebP, sized to the viewport ------------
+   Was a 1.0MB PNG served to every device. */
+.hero-bg {
+  background-image: url('../img/hero-960.webp');
+}
+
+@media (min-width: 992px) {
+  .hero-bg {
+    background-image: url('../img/hero-1920.webp');
+  }
+}
+
+/* The hero headline is the LCP element. It previously sat at
+   opacity 0 behind a 0.1s delay + 0.9s fade, pushing LCP out by
+   roughly a second for no visual gain. Same effect, ~4x faster. */
+.hero-animate {
+  animation-duration: 0.5s;
+}
+
+.hero-animate-1 { animation-delay: 0s; }
+.hero-animate-2 { animation-delay: 0.08s; }
+.hero-animate-3 { animation-delay: 0.16s; }
+.hero-animate-4 { animation-delay: 0.24s; }
+
+/* Two 560px blobs under a 90px blur, animated forever, are the most
+   expensive thing on the page to composite. Desktop keeps them. */
+@media (max-width: 991px) {
+  .hero-blob {
+    display: none;
+  }
+
+  .hero-bg {
+    animation: none;
+  }
+}
+
+/* --- Page header backgrounds ---------------------------------
+   Replaces inline `style="background: url('...png')"`, which forced
+   every visitor to download a 1.5-2.4MB PNG above the fold. */
+.page-header {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.page-header--carpet     { background-image: url('../img/hdr-carpet-960.webp'); }
+.page-header--upholstery { background-image: url('../img/hdr-upholstery-960.webp'); }
+.page-header--rug        { background-image: url('../img/hdr-rug-960.webp'); }
+.page-header--contact    { background-image: url('../img/hdr-contact-960.webp'); }
+
+@media (min-width: 992px) {
+  .page-header--carpet     { background-image: url('../img/hdr-carpet-1920.webp'); }
+  .page-header--upholstery { background-image: url('../img/hdr-upholstery-1920.webp'); }
+  .page-header--rug        { background-image: url('../img/hdr-rug-1920.webp'); }
+  .page-header--contact    { background-image: url('../img/hdr-contact-1920.webp'); }
+}
+
+/* Keeps the breadcrumb and heading legible over the photo. */
+.page-header {
+  position: relative;
+  isolation: isolate;
+}
+
+.page-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(90deg, rgba(10, 16, 38, 0.72) 0%, rgba(10, 16, 38, 0.38) 100%);
+}
+
+/* --- Navbar dropdown ----------------------------------------
+   Desktop hover is pure CSS now; main.js only handles click/touch. */
+@media (min-width: 992px) {
+  .site-navbar .nav-item.dropdown:hover > .dropdown-menu,
+  .site-navbar .nav-item.dropdown:focus-within > .dropdown-menu {
+    display: block;
+  }
+}
+
+/* --- Back to top --------------------------------------------
+   Was toggled by jQuery fadeIn/fadeOut writing inline display. */
+.back-to-top {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(12px);
+  transition: opacity 0.25s ease, visibility 0.25s ease, transform 0.25s ease;
+}
+
+.back-to-top.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+
+/* --- Google Maps facade -------------------------------------
+   The embed pulls ~900KB of third-party JS. It now loads on click. */
+.map-facade {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-align: center;
+  color: #fff;
+  background: linear-gradient(135deg, #0a1026 0%, #143a7a 100%);
+  transition: filter 0.2s ease;
+}
+
+.map-facade:hover,
+.map-facade:focus-visible {
+  filter: brightness(1.12);
+}
+
+.map-facade i {
+  font-size: 2rem;
+  color: #3d8eff;
+}
+
+.map-facade strong {
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.map-facade span {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.75);
+  max-width: 26ch;
+}
+
+/* --- Contact form validation --------------------------------- */
+.form-control.is-invalid {
+  border-color: #dc3545;
+}
+
+.help-block {
+  font-size: 0.85rem;
+  margin: 6px 0 0 18px;
+  min-height: 1.2em;
+}
+
+/* --- Layout stability ----------------------------------------
+   <img> now carries width/height, so give it an intrinsic ratio
+   while it is still fluid. Stops the page reflowing as photos land. */
+img {
+  height: auto;
+}
+
+/* The brand mark is square and laid out by height, so the width/height
+   attributes on the tag must not fight the 110px rule above it. */
+.site-navbar-brand img {
+  width: auto;
+}
+
+/* --- Reduced motion ------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .hero-animate {
+    opacity: 1;
+  }
+}
+
+/* --- Focus visibility (keyboard users) ------------------------ */
+a:focus-visible,
+button:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid #0066ff;
+  outline-offset: 2px;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 1000;
+  padding: 12px 20px;
+  background: #0066ff;
+  color: #fff;
+  font-weight: 600;
+  border-radius: 0 0 6px 0;
+}
+
+.skip-link:focus {
+  left: 0;
+  color: #fff;
+}
+
+/* ============================================================
+   Content components
+   Previously duplicated as inline <style> blocks in every page.
+   ============================================================ */
+
+/* Eyebrow labels above section titles. These used to be <h6>, which
+   broke the heading outline (h1 -> h6) for screen readers and search
+   engines; they are paragraphs now and keep their old size. */
+.eyebrow {
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+}
+
+/* Lead paragraph answering "what is this page" in one sentence, for
+   search snippets and answer engines. */
+.answer-summary {
+  font-size: 1.08rem;
+  line-height: 1.75;
+  color: #333;
+  border-left: 4px solid #0066ff;
+  background: #f6f9ff;
+  padding: 18px 24px;
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 28px;
+}
+
+/* Scannable key facts — the block answer engines lift verbatim. */
+.quick-facts {
+  list-style: none;
+  padding: 22px 26px;
+  margin: 0 0 32px;
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 10px;
+  display: grid;
+  gap: 10px 32px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.quick-facts li {
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.quick-facts strong {
+  color: #0a1026;
+}
+
+.trust-bar {
+  background: #f8f9fa;
+  border-top: 1px solid #e9ecef;
+  border-bottom: 1px solid #e9ecef;
+  padding: 18px 0;
+}
+
+.trust-bar-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.trust-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 22px;
+  border-radius: 50px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.trust-btn i {
+  font-size: 0.95rem;
+}
+
+.trust-btn.yelp {
+  background: #fff1f0;
+  color: #d32323;
+  border-color: #fbbcbc;
+}
+
+.trust-btn.yelp:hover {
+  background: #d32323;
+  color: #fff;
+  border-color: #d32323;
+  text-decoration: none;
+}
+
+.trust-btn.google {
+  background: #e8f0fe;
+  color: #4285f4;
+  border-color: #b3cefb;
+}
+
+.trust-btn.google:hover {
+  background: #4285f4;
+  color: #fff;
+  border-color: #4285f4;
+  text-decoration: none;
+}
+
+.trust-btn.phone {
+  background: #e8f5ea;
+  color: #23a036;
+  border-color: #a8d9ae;
+}
+
+.trust-btn.phone:hover {
+  background: #23a036;
+  color: #fff;
+  border-color: #23a036;
+  text-decoration: none;
+}
+
+.footer-link {
+  color: #fff !important;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.footer-link:hover {
+  color: #ccc !important;
+}
+
+.footer-brand {
+  font-size: 3.5rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+/* Cross-links between the three service pages. */
+.related-services {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  margin-top: 8px;
+}
+
+.related-service {
+  display: block;
+  padding: 20px 22px;
+  border: 1px solid #e9ecef;
+  border-radius: 10px;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.related-service:hover {
+  border-color: #0066ff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+  text-decoration: none;
+  color: inherit;
+}
+
+.related-service strong {
+  display: block;
+  color: #0066ff;
+  margin-bottom: 4px;
+}
+
+.related-service span {
+  font-size: 0.9rem;
+  color: #666;
+}

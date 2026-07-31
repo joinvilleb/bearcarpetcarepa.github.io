@@ -1,0 +1,1498 @@
+/*!
+ * Bear Carpet Care — mobile-first layer.
+ *
+ * Loaded after style.css, so it wins on equal specificity. The Bootstrap grid
+ * and utilities underneath are unchanged; this file sets the type scale,
+ * section rhythm, component styling and the mobile conversion furniture.
+ *
+ * Design targets: homepage under ~3,200 CSS px on a 390px viewport, every
+ * interactive target at least 44px, and the phone number always reachable.
+ */
+
+/* ============================================================
+   Tokens
+   ============================================================ */
+:root {
+  --brand: #0066ff;
+  --brand-ink: #0047b8;
+  --brand-dark: #0a1026;
+  --accent: #23a036;
+  --ink: #161c2b;
+  --muted: #5a6473;
+  --line: #e6e9ef;
+  --surface: #ffffff;
+  --surface-2: #f6f8fb;
+
+  --radius-sm: 10px;
+  --radius: 14px;
+  --radius-lg: 20px;
+
+  --shadow-sm: 0 1px 2px rgba(10, 16, 38, 0.06), 0 2px 8px rgba(10, 16, 38, 0.05);
+  --shadow-md: 0 4px 12px rgba(10, 16, 38, 0.08), 0 12px 32px rgba(10, 16, 38, 0.07);
+
+  /* Vertical rhythm: one knob for every section on the site. */
+  --section-y: clamp(2rem, 6vw, 4.5rem);
+  --callbar-h: 66px;
+}
+
+/* ============================================================
+   Base
+   ============================================================ */
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  color: var(--ink);
+  font-size: 1rem;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* Room for the sticky call bar so it never covers the last section. */
+@media (max-width: 991.98px) {
+  body {
+    padding-bottom: calc(var(--callbar-h) + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* Anchor jumps clear the sticky header. */
+:target {
+  scroll-margin-top: 90px;
+}
+
+/* ============================================================
+   Fluid type scale
+   Replaces Bootstrap's fixed rem sizes, which were tuned for
+   desktop and left mobile headings oversized and cramped.
+   ============================================================ */
+h1, .h1 { font-size: clamp(1.85rem, 6.1vw, 3rem);   line-height: 1.15; }
+h2, .h2 { font-size: clamp(1.45rem, 4.6vw, 2.2rem); line-height: 1.22; }
+h3, .h3 { font-size: clamp(1.15rem, 3.3vw, 1.45rem); line-height: 1.3; }
+h4, .h4 { font-size: clamp(1.05rem, 2.8vw, 1.25rem); line-height: 1.35; }
+h5, .h5 { font-size: clamp(1rem, 2.4vw, 1.1rem);     line-height: 1.45; }
+
+.display-2 { font-size: clamp(3rem, 13vw, 5.5rem); line-height: 1; }
+.display-4 { font-size: clamp(1.9rem, 6.4vw, 3.2rem); line-height: 1.1; }
+
+h1, h2, h3, h4, h5 {
+  letter-spacing: -0.015em;
+  overflow-wrap: break-word;
+}
+
+p {
+  overflow-wrap: break-word;
+}
+
+/* Comfortable reading measure for long-form service copy. */
+.prose p,
+.prose ul {
+  max-width: 68ch;
+}
+
+.prose > p {
+  margin-bottom: 1.15rem;
+}
+
+.prose h3 {
+  margin-top: 2.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.prose ul {
+  padding-left: 1.15rem;
+  margin-bottom: 1.5rem;
+}
+
+.prose li {
+  margin-bottom: 0.4rem;
+}
+
+/* ============================================================
+   Section rhythm
+   The template used .py-5 (3rem top and bottom) everywhere, which
+   on a 390px screen is most of a viewport of empty space per band.
+   ============================================================ */
+.section {
+  padding-top: var(--section-y);
+  padding-bottom: var(--section-y);
+}
+
+.section-tight {
+  padding-top: calc(var(--section-y) * 0.6);
+  padding-bottom: calc(var(--section-y) * 0.6);
+}
+
+.section-head {
+  margin-bottom: clamp(1.75rem, 4vw, 2.75rem);
+}
+
+.section-head p.lead-muted {
+  color: var(--muted);
+  margin-bottom: 0;
+}
+
+/* The old .section-title reserved 60px of left padding for a pair of
+   absolutely-positioned dashes. At 390px that ate 15% of the line and
+   read as a rendering fault. Now it is an accent rule above the text. */
+.section-title {
+  padding-left: 0;
+  position: relative;
+}
+
+.section-title::before,
+.section-title::after {
+  display: none;
+}
+
+.section-title-accent::before {
+  content: "";
+  /* The template's rule positions ::before absolutely; without resetting
+     that, the accent lands on top of the first line of the heading. */
+  position: static;
+  display: block;
+  width: 46px;
+  height: 4px;
+  border-radius: 4px;
+  background: var(--brand);
+  margin-bottom: 14px;
+}
+
+.text-center .section-title-accent::before,
+.section-head.text-center .section-title-accent::before {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.eyebrow {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--brand);
+  margin-bottom: 0.6rem;
+}
+
+/* ============================================================
+   Header
+   The brand mark was 110px tall, so on a phone the header alone
+   was an eighth of the viewport before any content appeared.
+   ============================================================ */
+.site-navbar {
+  padding-top: 0;
+  padding-bottom: 0;
+  box-shadow: 0 1px 0 var(--line), 0 2px 14px rgba(10, 16, 38, 0.05);
+}
+
+.site-navbar-brand img {
+  height: 52px;
+  width: auto;
+  padding: 0;
+}
+
+.site-navbar-name {
+  font-size: 1.02rem;
+  letter-spacing: -0.02em;
+}
+
+.site-navbar-brand {
+  gap: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.site-navbar .navbar-toggler {
+  min-width: 46px;
+  min-height: 46px;
+  margin: 0;
+  border-radius: 10px;
+}
+
+@media (min-width: 992px) {
+  .site-navbar-brand img {
+    height: 64px;
+  }
+
+  .site-navbar-name {
+    font-size: 1.14rem;
+  }
+}
+
+/* Mobile menu links need to be thumb-sized, not 24px text runs. */
+@media (max-width: 991.98px) {
+  .site-navbar .navbar-nav .nav-link {
+    padding: 14px 4px !important;
+    border-bottom: 1px solid var(--line);
+    font-size: 1rem;
+  }
+
+  .site-navbar .dropdown-menu {
+    padding: 4px 0 8px 14px;
+    background: transparent;
+  }
+
+  .site-navbar .dropdown-item {
+    padding: 12px 4px;
+    font-size: 0.95rem;
+  }
+
+  .site-navbar-actions {
+    padding: 14px 0 4px;
+  }
+
+  .site-navbar-actions .site-navbar-btn {
+    width: 100%;
+    text-align: center;
+    padding: 14px 22px !important;
+  }
+}
+
+/* ============================================================
+   Hero
+   ============================================================ */
+.hero-section {
+  min-height: 0;
+  padding-top: clamp(2.5rem, 9vw, 4.5rem);
+  padding-bottom: clamp(4rem, 12vw, 6.5rem);
+}
+
+.hero-content {
+  padding: 0;
+  max-width: 640px;
+}
+
+.hero-content h1 {
+  font-size: clamp(2rem, 7.4vw, 3.3rem);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  margin-bottom: 14px;
+}
+
+.hero-subtitle {
+  font-size: clamp(0.98rem, 2.6vw, 1.08rem);
+  line-height: 1.65;
+  margin-bottom: 26px;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.hero-ctas {
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+.hero-ctas .btn {
+  padding: 15px 26px;
+  min-height: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Two-up trust chips instead of a ragged four-across wrap. */
+.hero-trust {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 18px;
+  padding-top: 22px;
+}
+
+.hero-trust-item {
+  font-size: 0.8rem;
+  gap: 8px;
+}
+
+@media (min-width: 768px) {
+  .hero-trust {
+    display: flex;
+    gap: 26px;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .hero-ctas {
+    flex-direction: column;
+  }
+
+  .hero-ctas .btn {
+    width: 100%;
+  }
+}
+
+/* ============================================================
+   Page header (service + contact pages)
+   ============================================================ */
+.page-header {
+  margin-bottom: 0 !important;
+  padding-top: clamp(2.25rem, 8vw, 4rem) !important;
+  padding-bottom: clamp(2.25rem, 8vw, 4rem) !important;
+}
+
+.page-header h1 {
+  color: #fff !important;
+  text-transform: none !important;
+  margin: 0 0 10px;
+  font-weight: 800;
+}
+
+.page-header .breadcrumb-nav {
+  margin: 0;
+}
+
+.page-header .breadcrumb-nav ol {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  font-size: 0.85rem;
+}
+
+.page-header .breadcrumb-nav a {
+  color: rgba(255, 255, 255, 0.82);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 2px;
+}
+
+.page-header .breadcrumb-nav a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.page-header .breadcrumb-nav li[aria-current] {
+  color: #fff;
+  font-weight: 600;
+}
+
+.page-header .breadcrumb-nav li + li::before {
+  content: "/";
+  margin-right: 8px;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.page-header .breadcrumb-nav li {
+  display: flex;
+  align-items: center;
+}
+
+/* ============================================================
+   Answer summary + quick facts
+   ============================================================ */
+.answer-summary {
+  font-size: clamp(1rem, 2.6vw, 1.1rem);
+  line-height: 1.7;
+  border-left-width: 4px;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: clamp(16px, 4vw, 22px) clamp(16px, 4vw, 26px);
+  margin-bottom: 24px;
+}
+
+/* Dense on purpose: this is reference data, not reading copy, so it is
+   tuned for scanning rather than for the body line-height. */
+.quick-facts {
+  padding: clamp(14px, 3.5vw, 22px) clamp(16px, 4vw, 24px);
+  border-radius: var(--radius);
+  gap: 2px 28px;
+  margin-bottom: 0;
+  grid-template-columns: 1fr;
+}
+
+.quick-facts li {
+  font-size: 0.88rem;
+  line-height: 1.45;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.quick-facts li:last-child {
+  border-bottom: 0;
+}
+
+.quick-facts strong {
+  display: block;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+@media (min-width: 576px) {
+  .quick-facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2px 32px;
+  }
+
+  .quick-facts li {
+    border-bottom: 0;
+    padding: 8px 0;
+  }
+}
+
+/* ============================================================
+   Trust bar — one scrollable row instead of three stacked ones
+   ============================================================ */
+.trust-bar {
+  padding: 12px 0;
+}
+
+.trust-bar-inner {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  justify-content: flex-start;
+  gap: 10px;
+  padding-bottom: 2px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.trust-bar-inner::-webkit-scrollbar {
+  display: none;
+}
+
+.trust-btn {
+  flex: 0 0 auto;
+  min-height: 44px;
+  padding: 10px 18px;
+  font-size: 0.83rem;
+}
+
+@media (min-width: 768px) {
+  .trust-bar-inner {
+    flex-wrap: wrap;
+    justify-content: center;
+    overflow: visible;
+  }
+}
+
+/* ============================================================
+   Stat block ("30 Years Experience")
+   ============================================================ */
+.stat-card {
+  border-radius: var(--radius);
+  padding: clamp(1.75rem, 6vw, 3rem) 1.25rem;
+  text-align: center;
+}
+
+.stat-card .fa-5x {
+  font-size: clamp(2.4rem, 9vw, 4rem);
+}
+
+.stat-card .display-2 {
+  margin-bottom: 2px !important;
+}
+
+.stat-card .stat-label {
+  font-size: clamp(1.05rem, 3.2vw, 1.5rem);
+  font-weight: 700;
+  margin: 0;
+  color: #fff;
+}
+
+/* ============================================================
+   Cards & services
+   ============================================================ */
+.service-box {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm) !important;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 0 !important;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.service-box:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md) !important;
+  border-color: #cddcff;
+}
+
+/* Image first, then title — the old order put a bare heading above a
+   photo with no visual connection between them. */
+.service-box img {
+  order: -1;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.service-box-body {
+  padding: 20px 22px 24px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.service-box h3 {
+  margin-bottom: 8px;
+}
+
+.service-box p {
+  color: var(--muted);
+  font-size: 0.94rem;
+  margin-bottom: 18px;
+  flex: 1;
+}
+
+.service-box .btn {
+  align-self: flex-start;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* On phones the three stacked cards ran to ~1,100px of scroll. Turning
+   them side-on cuts that to ~430px without losing the photo. */
+@media (max-width: 575.98px) {
+  .service-box {
+    flex-direction: row;
+    min-height: 138px;
+  }
+
+  .service-box img {
+    order: 0;
+    flex: 0 0 38%;
+    width: 38%;
+    height: auto;
+    align-self: stretch;
+    aspect-ratio: auto;
+  }
+
+  .service-box-body {
+    padding: 14px 16px 16px;
+  }
+
+  .service-box h3 {
+    font-size: 1.02rem;
+    margin-bottom: 5px;
+  }
+
+  .service-box p {
+    font-size: 0.84rem;
+    line-height: 1.5;
+    margin-bottom: 12px;
+  }
+
+  .service-box .btn {
+    font-size: 0.82rem;
+    min-height: 40px;
+    padding: 7px 16px;
+  }
+}
+
+/* ============================================================
+   Content imagery
+   Photos were rendering at wildly different heights because each
+   source has a different aspect ratio. Now they are consistent.
+   ============================================================ */
+.img-content,
+.img-hero {
+  width: 100%;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  margin: 1.5rem 0;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.img-hero {
+  aspect-ratio: 3 / 1;
+}
+
+/* Opt out of the fixed ratio. Needed for anything with text baked into
+   the image — a cover-crop would slice the labels off. */
+.img-natural {
+  aspect-ratio: auto;
+  object-fit: contain;
+}
+
+.img-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 1.5rem 0;
+}
+
+.img-row .img-styled {
+  width: 100%;
+  margin: 0;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+}
+
+.img-styled:hover,
+.img-content:hover,
+.img-hero:hover {
+  transform: none;
+}
+
+/* ============================================================
+   Testimonials
+   ============================================================ */
+/* Four stacked quote cards cost ~1,100px on a phone. As a snap-scroller
+   they cost one card's height and read as something you can flick through. */
+.testimonial-scroller {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  margin: 0 -15px;
+  padding: 4px 15px 10px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.testimonial-scroller::-webkit-scrollbar {
+  display: none;
+}
+
+.testimonial-scroller > * {
+  flex: 0 0 82%;
+  scroll-snap-align: start;
+}
+
+@media (min-width: 768px) {
+  .testimonial-scroller {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    overflow: visible;
+    margin: 0;
+    padding: 0;
+  }
+
+  .testimonial-scroller > * {
+    flex: initial;
+  }
+}
+
+@media (min-width: 992px) {
+  .testimonial-scroller {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.scroll-hint {
+  display: block;
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+@media (min-width: 768px) {
+  .scroll-hint {
+    display: none;
+  }
+}
+
+.testimonial-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  padding: 22px 24px;
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.testimonial-card blockquote {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--ink);
+  margin: 0 0 14px;
+  flex: 1;
+}
+
+.testimonial-card .stars {
+  color: #f5a623;
+  font-size: 0.85rem;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+}
+
+.testimonial-card figcaption {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--muted);
+  margin: 0;
+}
+
+.testimonial-card figcaption::before {
+  content: "— ";
+}
+
+/* ============================================================
+   FAQ accordion
+   Native <details>, so it costs no JavaScript and stays keyboard
+   accessible. Collapsing it cuts ~1,400px off the homepage.
+   ============================================================ */
+.faq-list {
+  border-top: 1px solid var(--line);
+}
+
+.faq-item {
+  border-bottom: 1px solid var(--line);
+}
+
+.faq-item summary {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 2px;
+  cursor: pointer;
+  list-style: none;
+  min-height: 48px;
+}
+
+.faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-item summary h3 {
+  font-size: clamp(1rem, 2.9vw, 1.12rem);
+  font-weight: 700;
+  margin: 0;
+  color: var(--ink);
+  flex: 1;
+}
+
+.faq-item summary::after {
+  content: "";
+  flex: 0 0 20px;
+  height: 20px;
+  margin-top: 3px;
+  background: currentColor;
+  color: var(--brand);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 5v14M5 12h14' stroke='black' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 5v14M5 12h14' stroke='black' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  transition: transform 0.2s ease;
+}
+
+.faq-item[open] summary::after {
+  transform: rotate(45deg);
+}
+
+.faq-item .faq-answer {
+  padding: 0 2px 20px;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  max-width: 68ch;
+}
+
+.faq-item .faq-answer p:last-child {
+  margin-bottom: 0;
+}
+
+/* ============================================================
+   Related services cross-links
+   ============================================================ */
+.related-service {
+  min-height: 44px;
+  border-radius: var(--radius);
+}
+
+/* ============================================================
+   Call to action band
+   ============================================================ */
+.cta-band {
+  background: linear-gradient(135deg, var(--brand-dark) 0%, #123a86 100%);
+  color: #fff;
+  border-radius: var(--radius-lg);
+  padding: clamp(2rem, 7vw, 3.25rem) clamp(1.25rem, 5vw, 3rem);
+  text-align: center;
+}
+
+.cta-band h2 {
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.cta-band p {
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 24px;
+}
+
+.cta-band .btn {
+  min-height: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 30px;
+}
+
+.cta-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+
+@media (max-width: 575.98px) {
+  .cta-actions .btn {
+    width: 100%;
+  }
+}
+
+/* ============================================================
+   Sticky call bar (mobile only)
+   The whole point of the site is getting a phone call, so the
+   number follows the visitor down the page.
+   ============================================================ */
+.callbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1030;
+  display: flex;
+  gap: 8px;
+  padding: 9px 10px calc(9px + env(safe-area-inset-bottom, 0px));
+  background: rgba(255, 255, 255, 0.97);
+  backdrop-filter: saturate(180%) blur(8px);
+  -webkit-backdrop-filter: saturate(180%) blur(8px);
+  border-top: 1px solid var(--line);
+  box-shadow: 0 -4px 18px rgba(10, 16, 38, 0.09);
+}
+
+.callbar-btn {
+  flex: 1;
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-decoration: none;
+  padding: 10px 12px;
+  line-height: 1.2;
+}
+
+.callbar-call {
+  flex: 1.5;
+  background: var(--accent);
+  color: #fff;
+}
+
+.callbar-call:hover,
+.callbar-call:focus {
+  background: #1c8a2e;
+  color: #fff;
+  text-decoration: none;
+}
+
+.callbar-quote {
+  background: var(--brand);
+  color: #fff;
+}
+
+.callbar-quote:hover,
+.callbar-quote:focus {
+  background: var(--brand-ink);
+  color: #fff;
+  text-decoration: none;
+}
+
+@media (min-width: 992px) {
+  .callbar {
+    display: none;
+  }
+}
+
+/* Keep the back-to-top button clear of the call bar. */
+@media (max-width: 991.98px) {
+  .back-to-top {
+    bottom: calc(var(--callbar-h) + 14px + env(safe-area-inset-bottom, 0px));
+    right: 16px;
+  }
+}
+
+/* ============================================================
+   Buttons & tap targets
+   ============================================================ */
+.btn {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+}
+
+.btn-lg {
+  min-height: 52px;
+}
+
+.btn-sm {
+  min-height: 40px;
+  padding: 8px 18px;
+}
+
+.back-to-top {
+  width: 46px;
+  height: 46px;
+  padding: 0 !important;
+  border-radius: 50%;
+}
+
+/* ============================================================
+   Contact page
+   ============================================================ */
+.contact-form .form-control {
+  border-radius: 10px;
+  min-height: 50px;
+  padding: 12px 18px !important;
+  font-size: 1rem;
+  border: 1px solid #d8dde6;
+}
+
+.contact-form textarea.form-control {
+  min-height: 140px;
+}
+
+.contact-form .form-control:focus {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.15);
+}
+
+.contact-form .btn {
+  border-radius: 10px;
+  min-height: 54px;
+}
+
+.help-block {
+  margin-left: 4px;
+}
+
+.contact-methods {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.contact-method {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  text-decoration: none;
+  color: inherit;
+  min-height: 64px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.contact-method:hover {
+  border-color: var(--brand);
+  box-shadow: var(--shadow-sm);
+  text-decoration: none;
+  color: inherit;
+}
+
+.contact-method i {
+  font-size: 1.15rem;
+  color: var(--brand);
+  flex: 0 0 auto;
+}
+
+.contact-method span {
+  display: block;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.contact-method strong {
+  font-size: 1rem;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.map-wrap {
+  position: relative;
+  min-height: 320px;
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+/* ============================================================
+   Footer — condensed
+   ============================================================ */
+.site-footer {
+  background: var(--brand-dark);
+  color: rgba(255, 255, 255, 0.78);
+  padding: var(--section-y) 0 0;
+  margin-top: var(--section-y);
+}
+
+.site-footer h2 {
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: #fff;
+  margin-bottom: 14px;
+  font-weight: 700;
+}
+
+.footer-brand {
+  font-size: clamp(1.35rem, 4.4vw, 1.7rem);
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 10px;
+  line-height: 1.2;
+}
+
+.site-footer p {
+  font-size: 0.92rem;
+  line-height: 1.65;
+}
+
+.site-footer a {
+  color: rgba(255, 255, 255, 0.82);
+  text-decoration: none;
+}
+
+.site-footer a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.footer-links a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  font-size: 0.92rem;
+}
+
+/* Phone and email in the footer are primary actions, so they get the
+   same 44px target as everything else rather than a 17px text run. */
+.footer-contact a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  font-size: 0.95rem;
+  overflow-wrap: anywhere;
+}
+
+.footer-col {
+  margin-bottom: 24px;
+}
+
+.site-footer h2 {
+  margin-bottom: 10px;
+}
+
+.footer-hours {
+  font-size: 0.88rem;
+  margin: 0;
+}
+
+.footer-social {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.footer-social a {
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.footer-social a:hover {
+  background: var(--brand);
+  color: #fff;
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  margin-top: 8px;
+  padding: 20px 0;
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.6);
+  text-align: center;
+}
+
+.footer-bottom a {
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: underline;
+}
+
+/* ============================================================
+   Colour contrast (WCAG AA, 4.5:1 for body-size text)
+   Measured values are in the comments; the template's originals
+   sat between 3.0:1 and 3.5:1.
+   ============================================================ */
+.site-navbar-name small {
+  color: #6a6a6a;                 /* was #888  — 3.54:1 -> 5.41:1 */
+}
+
+.trust-btn.yelp {
+  color: #b01b1b;                 /* was #d32323 — 4.73:1 -> 6.32:1 */
+}
+
+.trust-btn.google {
+  color: #14539f;                 /* was #4285f4 — 3.11:1 -> 6.62:1 */
+}
+
+.trust-btn.phone {
+  color: #016036;                 /* was #23a036 — 3.04:1 -> 6.80:1, logo green */
+  background: #eaf3ee;
+  border-color: #b8d8c5;
+}
+
+/* Call bar uses the logo green and navy: 7.70:1 and 9.85:1 on white. */
+.callbar-call {
+  background: #016036;
+}
+
+.callbar-call:hover,
+.callbar-call:focus {
+  background: #014a29;
+}
+
+.callbar-quote {
+  background: #0d4671;
+}
+
+.callbar-quote:hover,
+.callbar-quote:focus {
+  background: #0a3557;
+}
+
+/* Links inside running text must not rely on colour alone. */
+.answer-summary a,
+.prose p a,
+.faq-answer a,
+.quick-facts a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* ============================================================
+   The stat card behind "30 Years Experience"
+   The template pointed this at a 1.7MB PNG.
+   ============================================================ */
+.bg-about {
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.62), rgba(0, 0, 0, 0.62)),
+    url('../img/about-480.webp') center / cover no-repeat;
+}
+
+@media (min-width: 576px) {
+  .bg-about {
+    background:
+      linear-gradient(rgba(0, 0, 0, 0.62), rgba(0, 0, 0, 0.62)),
+      url('../img/about-960.webp') center / cover no-repeat;
+  }
+}
+
+/* ============================================================
+   BRAND
+   The palette is sampled straight out of the logo: the navy from
+   the badge ring (#0d4671) and the green from the pine trees
+   (#016036). The template shipped a generic #007bff, which is why
+   the site read as a stock tech landing page rather than a
+   cleaning company. Every pairing below clears WCAG AA.
+   ============================================================ */
+:root {
+  --brand: #0d4671;
+  --brand-600: #10578e;
+  --brand-700: #0a3557;
+  --brand-tint: #eef4f9;
+
+  --accent: #0a7a44;
+  --accent-700: #016036;
+  --accent-tint: #eaf3ee;
+
+  --ink: #16212e;
+  --muted: #566372;
+  --line: #e2e8ef;
+  --surface-2: #f4f7fa;
+
+  --shadow-sm: 0 1px 2px rgba(13, 70, 113, 0.07), 0 2px 8px rgba(13, 70, 113, 0.06);
+  --shadow-md: 0 4px 12px rgba(13, 70, 113, 0.1), 0 14px 34px rgba(13, 70, 113, 0.09);
+}
+
+a {
+  color: var(--brand-600);
+}
+
+a:hover {
+  color: var(--brand-700);
+}
+
+.text-primary { color: var(--brand) !important; }
+.text-secondary { color: var(--accent-700) !important; }
+.bg-primary { background-color: var(--brand) !important; }
+
+.eyebrow { color: var(--accent-700); }
+.section-title-accent::before { background: var(--accent); }
+.answer-summary { border-left-color: var(--brand); background: var(--brand-tint); }
+.related-service:hover { border-color: var(--brand); }
+.related-service strong { color: var(--brand); }
+.contact-method i { color: var(--brand); }
+.contact-method:hover { border-color: var(--brand); }
+.map-facade { background: linear-gradient(135deg, #0b2438 0%, var(--brand) 100%); }
+.map-facade i { color: #7fb2dd; }
+.site-navbar .navbar-nav .nav-link:hover,
+.site-navbar .navbar-nav .nav-link.active,
+.site-navbar .dropdown-item:hover,
+.site-navbar-phone:hover { color: var(--brand-600) !important; }
+.site-navbar .navbar-nav .nav-link.active::after { background: var(--brand-600); }
+.site-navbar .dropdown-item:hover { background: rgba(13, 70, 113, 0.06); }
+.contact-form .form-control:focus {
+  border-color: var(--brand-600);
+  box-shadow: 0 0 0 3px rgba(13, 70, 113, 0.15);
+}
+a:focus-visible, button:focus-visible, [tabindex]:focus-visible { outline-color: var(--brand-600); }
+.site-footer { background: #0b1b2b; }
+.footer-social a:hover { background: var(--brand-600); }
+.cta-band { background: linear-gradient(135deg, #0b2438 0%, var(--brand) 100%); }
+.stars { color: #e8a33d; }
+
+/* ============================================================
+   BUTTONS
+   Squarer, heavier and sized like something you tap with a thumb
+   while holding a phone. The pill shape and hairline weight were
+   the template's, not the trade's.
+   ============================================================ */
+.btn {
+  border-radius: 8px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  border-width: 2px;
+  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn-primary,
+.btn-primary:not(:disabled):not(.disabled):active {
+  background-color: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: var(--brand-700);
+  border-color: var(--brand-700);
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(13, 70, 113, 0.28);
+}
+
+/* "Call" is the money action, so it gets the logo green and the
+   heaviest treatment on the page. */
+.btn-call {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.btn-call:hover,
+.btn-call:focus {
+  background-color: var(--accent-700);
+  border-color: var(--accent-700);
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(1, 96, 54, 0.3);
+}
+
+.btn-outline-light {
+  border-color: rgba(255, 255, 255, 0.65);
+  color: #fff;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.btn-outline-light:hover,
+.btn-outline-light:focus {
+  background: #fff;
+  color: var(--brand) !important;
+  border-color: #fff;
+}
+
+.btn-light {
+  background: #fff;
+  border-color: #fff;
+  color: var(--brand);
+}
+
+.btn-light:hover,
+.btn-light:focus {
+  background: #eaf1f7;
+  border-color: #eaf1f7;
+  color: var(--brand-700);
+}
+
+.site-navbar-btn {
+  border-radius: 8px !important;
+}
+
+/* ============================================================
+   HERO
+   Out: blurred floating gradient blobs, a wave divider and a slow
+   Ken Burns pan — the stock "AI landing page" kit. In: the actual
+   photo of the work, a directional scrim so the type stays legible
+   over it, and the phone number as the loudest thing on screen.
+   ============================================================ */
+.hero-blob,
+.hero-wave {
+  display: none;
+}
+
+.hero-bg {
+  animation: none;
+}
+
+.hero-section {
+  padding-top: clamp(2.25rem, 8vw, 5rem);
+  padding-bottom: clamp(2.5rem, 8vw, 5rem);
+  border-bottom: 5px solid var(--accent);
+}
+
+.hero-overlay {
+  background: linear-gradient(
+    100deg,
+    rgba(8, 23, 38, 0.95) 0%,
+    rgba(8, 23, 38, 0.86) 42%,
+    rgba(8, 23, 38, 0.5) 100%
+  );
+}
+
+@media (min-width: 992px) {
+  .hero-overlay {
+    background: linear-gradient(
+      100deg,
+      rgba(8, 23, 38, 0.94) 0%,
+      rgba(8, 23, 38, 0.8) 38%,
+      rgba(8, 23, 38, 0.18) 100%
+    );
+  }
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 7px 15px;
+  border-radius: 999px;
+  margin-bottom: 16px;
+  white-space: nowrap;
+}
+
+.hero-badge i {
+  color: #7fd3a0;
+}
+
+.hero-content h1 {
+  letter-spacing: -0.03em;
+}
+
+.hero-phone {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+  color: #fff;
+  font-size: clamp(1.5rem, 5.6vw, 2.1rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+  margin-bottom: 6px;
+}
+
+.hero-phone:hover,
+.hero-phone:focus {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.hero-phone small {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+/* Trust row: ticks, not floating icons. */
+.hero-trust {
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+  padding-top: 20px;
+  gap: 10px 20px;
+}
+
+.hero-trust-item {
+  font-size: 0.83rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.hero-trust-item i {
+  color: #7fd3a0;
+  font-size: 0.92rem;
+  flex: 0 0 auto;
+}
+
+/* ============================================================
+   Page headers pick up the same brand scrim
+   ============================================================ */
+.page-header {
+  border-bottom: 5px solid var(--accent);
+}
+
+.page-header::before {
+  background: linear-gradient(100deg, rgba(8, 23, 38, 0.9) 0%, rgba(8, 23, 38, 0.55) 100%);
+}
+
+/* ============================================================
+   Utility
+   ============================================================ */
+.bg-soft {
+  background: var(--surface-2);
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

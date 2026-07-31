@@ -1,146 +1,175 @@
-(function ($) {
-    "use strict";
-    
-    // Dropdown on mouse hover
-    $(document).ready(function () {
-        function toggleNavbarMethod() {
-            if ($(window).width() > 992) {
-                $('.navbar .dropdown').on('mouseover', function () {
-                    $('.dropdown-toggle', this).trigger('click');
-                }).on('mouseout', function () {
-                    $('.dropdown-toggle', this).trigger('click').blur();
-                });
-            } else {
-                $('.navbar .dropdown').off('mouseover').off('mouseout');
-            }
-        }
-        toggleNavbarMethod();
-        $(window).resize(toggleNavbarMethod);
-    });
-    
-    
-    // Back to top button
-    $(window).scroll(function () {
-        if ($(this).scrollTop() > 100) {
-            $('.back-to-top').fadeIn('slow');
-        } else {
-            $('.back-to-top').fadeOut('slow');
-        }
-    });
-    $('.back-to-top').click(function () {
-        $('html, body').animate({scrollTop: 0}, 1500, 'easeInOutExpo');
-        return false;
-    });
+/*!
+ * Bear Carpet Care — site behaviour.
+ *
+ * Replaces jQuery 3.4.1, Bootstrap 4 JS bundle, easing, waypoints, counterup,
+ * Owl Carousel, Isotope and Lightbox (~370KB) with the handful of behaviours
+ * this site actually uses. Loaded with `defer`, so the DOM is ready on execute.
+ */
+(function () {
+  "use strict";
 
+  var prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    // Counter
-    $('[data-toggle="counter-up"]').counterUp({
-        delay: 10,
-        time: 2000
+  /* ---------------------------------------------------------------
+   * Navbar: mobile collapse toggle
+   * ------------------------------------------------------------- */
+  var toggler = document.querySelector('.navbar-toggler[data-target]');
+  var collapse = toggler && document.querySelector(toggler.getAttribute('data-target'));
+
+  function setCollapsed(open) {
+    if (!collapse) return;
+    collapse.classList.toggle('show', open);
+    toggler.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+
+  if (toggler && collapse) {
+    toggler.setAttribute('aria-expanded', 'false');
+    toggler.setAttribute('aria-controls', collapse.id);
+    toggler.addEventListener('click', function (e) {
+      e.preventDefault();
+      setCollapsed(!collapse.classList.contains('show'));
     });
+  }
 
+  /* ---------------------------------------------------------------
+   * Navbar: Services dropdown.
+   * Desktop hover is handled in CSS; this covers click / keyboard,
+   * which is the only way to open it on touch devices.
+   * ------------------------------------------------------------- */
+  var dropdowns = [].slice.call(document.querySelectorAll('.nav-item.dropdown'));
 
-    // Modal Video
-    $(document).ready(function () {
-        var $videoSrc;
-        $('.btn-play').click(function () {
-            $videoSrc = $(this).data("src");
+  function closeDropdowns(except) {
+    dropdowns.forEach(function (d) {
+      if (d === except) return;
+      d.classList.remove('show');
+      var m = d.querySelector('.dropdown-menu');
+      var t = d.querySelector('.dropdown-toggle');
+      if (m) m.classList.remove('show');
+      if (t) t.setAttribute('aria-expanded', 'false');
+    });
+  }
+
+  dropdowns.forEach(function (drop) {
+    var toggle = drop.querySelector('.dropdown-toggle');
+    var menu = drop.querySelector('.dropdown-menu');
+    if (!toggle || !menu) return;
+
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.setAttribute('aria-haspopup', 'true');
+
+    toggle.addEventListener('click', function (e) {
+      e.preventDefault();
+      var open = !menu.classList.contains('show');
+      closeDropdowns(drop);
+      drop.classList.toggle('show', open);
+      menu.classList.toggle('show', open);
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  });
+
+  document.addEventListener('click', function (e) {
+    if (!e.target.closest('.nav-item.dropdown')) closeDropdowns(null);
+    if (collapse && collapse.classList.contains('show') && !e.target.closest('.site-navbar')) {
+      setCollapsed(false);
+    }
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    closeDropdowns(null);
+    setCollapsed(false);
+  });
+
+  /* ---------------------------------------------------------------
+   * Back-to-top button
+   * ------------------------------------------------------------- */
+  var backToTop = document.querySelector('.back-to-top');
+  if (backToTop) {
+    var ticking = false;
+    var onScroll = function () {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(function () {
+        backToTop.classList.toggle('is-visible', window.pageYOffset > 300);
+        ticking = false;
+      });
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    backToTop.addEventListener('click', function (e) {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+    });
+  }
+
+  /* ---------------------------------------------------------------
+   * "30 Years Experience" count-up, fired when it scrolls into view
+   * ------------------------------------------------------------- */
+  var counters = [].slice.call(document.querySelectorAll('[data-toggle="counter-up"]'));
+
+  function runCounter(el) {
+    var target = parseInt(el.textContent.replace(/\D/g, ''), 10);
+    if (!target || prefersReducedMotion) return;
+    var duration = 1600;
+    var start = null;
+
+    el.textContent = '0';
+    (function step(now) {
+      if (start === null) start = now;
+      var progress = Math.min((now - start) / duration, 1);
+      // easeOutQuad, so it settles rather than stopping dead
+      el.textContent = Math.round(target * (1 - (1 - progress) * (1 - progress)));
+      if (progress < 1) window.requestAnimationFrame(step);
+    })(window.performance.now());
+  }
+
+  if (counters.length) {
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          runCounter(entry.target);
+          io.unobserve(entry.target);
         });
-        console.log($videoSrc);
+      }, { threshold: 0.4 });
+      counters.forEach(function (c) { io.observe(c); });
+    } else {
+      counters.forEach(runCounter);
+    }
+  }
 
-        $('#videoModal').on('shown.bs.modal', function (e) {
-            $("#video").attr('src', $videoSrc + "?autoplay=1&amp;modestbranding=1&amp;showinfo=0");
-        })
-
-        $('#videoModal').on('hide.bs.modal', function (e) {
-            $("#video").attr('src', $videoSrc);
-        })
+  /* ---------------------------------------------------------------
+   * Google Maps facade — the embed only loads once the user asks for
+   * it, keeping ~900KB of third-party JS off the critical path.
+   * ------------------------------------------------------------- */
+  var mapFacade = document.querySelector('[data-map-embed]');
+  if (mapFacade) {
+    var loadMap = function () {
+      var iframe = document.createElement('iframe');
+      iframe.src = mapFacade.getAttribute('data-map-embed');
+      iframe.title = 'Map of the Bear Carpet Care service area around Harrisburg, Pennsylvania';
+      iframe.loading = 'lazy';
+      iframe.referrerPolicy = 'no-referrer-when-downgrade';
+      iframe.allowFullscreen = true;
+      iframe.width = '100%';
+      iframe.height = '100%';
+      iframe.style.border = '0';
+      iframe.style.position = 'absolute';
+      iframe.style.inset = '0';
+      mapFacade.innerHTML = '';
+      mapFacade.appendChild(iframe);
+      mapFacade.removeAttribute('data-map-embed');
+    };
+    mapFacade.addEventListener('click', loadMap);
+    mapFacade.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); loadMap(); }
     });
+  }
 
-
-    // Service carousel
-    $(".service-carousel").owlCarousel({
-        autoplay: true,
-        smartSpeed: 1500,
-        margin: 30,
-        dots: false,
-        loop: true,
-        nav : true,
-        navText : [
-            '<i class="fa fa-angle-left" aria-hidden="true"></i>',
-            '<i class="fa fa-angle-right" aria-hidden="true"></i>'
-        ],
-        responsive: {
-            0:{
-                items:1
-            },
-            576:{
-                items:1
-            },
-            768:{
-                items:2
-            },
-            992:{
-                items:2
-            }
-        }
-    });
-
-
-    // Portfolio isotope and filter
-    var portfolioIsotope = $('.portfolio-container').isotope({
-        itemSelector: '.portfolio-item',
-        layoutMode: 'fitRows'
-    });
-
-    $('#portfolio-flters li').on('click', function () {
-        $("#portfolio-flters li").removeClass('active');
-        $(this).addClass('active');
-
-        portfolioIsotope.isotope({filter: $(this).data('filter')});
-    });
-
-
-    // Team carousel
-    $(".team-carousel").owlCarousel({
-        autoplay: true,
-        smartSpeed: 1500,
-        margin: 30,
-        dots: false,
-        loop: true,
-        nav : true,
-        navText : [
-            '<i class="fa fa-angle-left" aria-hidden="true"></i>',
-            '<i class="fa fa-angle-right" aria-hidden="true"></i>'
-        ],
-        responsive: {
-            0:{
-                items:1
-            },
-            576:{
-                items:1
-            },
-            768:{
-                items:2
-            },
-            992:{
-                items:3
-            }
-        }
-    });
-
-
-    // Testimonials carousel
-    $(".testimonial-carousel").owlCarousel({
-        autoplay: true,
-        smartSpeed: 1000,
-        items: 1,
-        loop: true,
-    });
-
-    // Dynamic copyright year
-    var yearEl = document.getElementById('copy-year');
-    if (yearEl) yearEl.textContent = new Date().getFullYear();
-
-})(jQuery);
-
+  /* ---------------------------------------------------------------
+   * Copyright year
+   * ------------------------------------------------------------- */
+  var yearEl = document.getElementById('copy-year');
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
+})();
