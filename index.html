@@ -41,9 +41,9 @@
 
     <!-- Critical assets the LCP depends on -->
     <link rel="preload" href="fonts/raleway-latin-var.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" as="image" href="img/hero-card-800.webp"
-          imagesrcset="img/hero-card-560.webp 560w, img/hero-card-800.webp 800w, img/hero-card-1050.webp 1050w"
-          imagesizes="(min-width: 992px) 46vw, 100vw" fetchpriority="high">
+    <link rel="preload" as="image" href="img/brighthero-720.webp" media="(max-width: 767px)" fetchpriority="high">
+    <link rel="preload" as="image" href="img/brighthero-960.webp" media="(min-width: 768px) and (max-width: 1199px)" fetchpriority="high">
+    <link rel="preload" as="image" href="img/brighthero-1440.webp" media="(min-width: 1200px)" fetchpriority="high">
 
     <link rel="stylesheet" href="css/site.min.css">
 
@@ -139,7 +139,7 @@
           "dateModified": "2026-07-31",
           "speakable": {
             "@type": "SpeakableSpecification",
-            "cssSelector": [".hero-copy h1", ".answer-summary"]
+            "cssSelector": [".hero-inner h1", ".answer-summary"]
           },
           "mainEntity": [
             {
@@ -222,46 +222,24 @@
     <!-- Hero Start -->
     <section class="hero">
         <div class="container">
-            <div class="hero-grid">
-                <div class="hero-copy">
-                    <h1>Carpets, furniture and rugs, deep cleaned</h1>
-                    <p class="hero-lead">Steam cleaning that pulls out the dirt your vacuum leaves behind. Non-toxic and safe around kids and pets. Free quotes, no obligation.</p>
-
-                    <div class="hero-ctas">
-                        <a href="tel:+17174547347" class="btn btn-call btn-lg">
-                            <i class="fa fa-phone-alt mr-2" aria-hidden="true"></i>Call (717) 454-7347
-                        </a>
-                        <a href="contact.html" class="btn btn-outline-brand btn-lg">Get a Free Quote</a>
-                    </div>
-
-                    <ul class="hero-ticks">
-                        <li>30+ years experience</li>
-                        <li>Safe for pets &amp; kids</li>
-                        <li>Non-toxic products</li>
-                        <li>Free quotes</li>
-                    </ul>
+            <div class="hero-inner">
+                <h1>Carpets, furniture and rugs, deep cleaned</h1>
+                <p class="hero-lead">Harrisburg and Central PA. 30 years in. Non-toxic, pet-safe, free quotes.</p>
+                <div class="hero-ctas">
+                    <a href="tel:+17174547347" class="btn btn-call btn-lg">
+                        <i class="fa fa-phone-alt mr-2" aria-hidden="true"></i>Call (717) 454-7347
+                    </a>
+                    <a href="contact.html" class="btn btn-outline-light btn-lg">Get a Free Quote</a>
                 </div>
-
-                <div class="hero-media">
-                    <img src="img/hero-card-800.webp"
-                         srcset="img/hero-card-560.webp 560w, img/hero-card-800.webp 800w, img/hero-card-1050.webp 1050w"
-                         sizes="(min-width: 992px) 46vw, 100vw"
-                         alt="Bear Carpet Care cleaning an oriental rug at their Harrisburg, PA facility"
-                         width="800" height="533" fetchpriority="high" decoding="async">
-                </div>
+                <ul class="hero-ticks">
+                    <li>30+ years</li>
+                    <li>Pet &amp; kid safe</li>
+                    <li>Free quotes</li>
+                </ul>
             </div>
         </div>
     </section>
     <!-- Hero End -->
-
-
-    <!-- Intro / answer summary -->
-    <section class="container section-tight">
-        <p class="answer-summary">
-            <strong>Bear Carpet Care</strong> cleans carpets, upholstery and area rugs across <strong>Harrisburg and Central PA</strong>. Over 30 years in business, using non-toxic products that are safe around kids and pets. Call <a href="tel:+17174547347">(717) 454-7347</a> for a free quote.
-        </p>
-    </section>
-
     <!-- Services -->
     <section class="bg-soft">
         <div class="container section">
@@ -278,7 +256,7 @@
                              width="640" height="432" loading="lazy" decoding="async">
                         <div class="service-box-body">
                             <h3>Carpet Cleaning</h3>
-                            <p>Wall-to-wall steam cleaning, stain removal and Scotchgard protection using non-toxic, pet-safe methods.</p>
+                            <p>Steam cleaning, stain and pet-odour removal, Scotchgard protection.</p>
                             <a href="carpet-cleaning.html" class="btn btn-sm btn-primary">Learn More<span class="visually-hidden"> about carpet cleaning</span></a>
                         </div>
                     </div>
@@ -292,7 +270,7 @@
                              width="640" height="304" loading="lazy" decoding="async">
                         <div class="service-box-body">
                             <h3>Upholstery Cleaning</h3>
-                            <p>Sofas, chairs and sectionals deep cleaned to lift dirt, remove odors and preserve the fabric.</p>
+                            <p>Sofas, sectionals, chairs and recliners, cleaned and protected.</p>
                             <a href="upholstery-cleaning.html" class="btn btn-sm btn-primary">Learn More<span class="visually-hidden"> about upholstery cleaning</span></a>
                         </div>
                     </div>
@@ -306,7 +284,7 @@
                              width="512" height="465" loading="lazy" decoding="async">
                         <div class="service-box-body">
                             <h3>Oriental Rug Cleaning</h3>
-                            <p>Antique and modern area rugs cleaned, repaired and restored. Free pick-up and delivery.</p>
+                            <p>Cleaned, repaired and restored. Free pick-up and delivery.</p>
                             <a href="oriental-rug-cleaning.html" class="btn btn-sm btn-primary">Learn More<span class="visually-hidden"> about oriental rug cleaning</span></a>
                         </div>
                     </div>
@@ -326,9 +304,8 @@
                 </div>
             </div>
             <div class="col-lg-7">
-                <h2 class="section-title section-title-accent mb-3">Carpets cleaned by the best in the industry</h2>
-                <p>At Bear Carpet Care we have been proudly serving homes and businesses for over 30 years, and we guarantee your satisfaction on carpet, upholstery, and rug cleaning.</p>
-                <p>Our friendly, knowledgeable team uses eco-friendly methods that are safe for pets and children. We treat your home like it's our own.</p>
+                <h2 class="section-title section-title-accent mb-3">Three decades of doing this well</h2>
+                <p>Thirty years cleaning carpet, upholstery and rugs for homes and businesses across Central PA, with methods that are safe for pets and children. We treat your home like it's our own.</p>
             </div>
         </div>
     </section>
@@ -375,8 +352,7 @@
                 <div class="col-lg-9">
                     <div class="section-head text-center">
                         <h2>Frequently Asked Questions</h2>
-                        <p class="lead-muted">Common questions about our cleaning services</p>
-                    </div>
+                                            </div>
 
                     <div class="faq-list">
                         <details class="faq-item">
@@ -425,7 +401,6 @@
     <section class="container section">
         <div class="cta-band">
             <h2>Need a quote or have a question?</h2>
-            <p>Free, no-obligation quotes across Harrisburg and Central Pennsylvania.</p>
             <div class="cta-actions">
                 <a href="tel:+17174547347" class="btn btn-call btn-lg"><i class="fa fa-phone-alt mr-2" aria-hidden="true"></i>Call (717) 454-7347</a>
                 <a href="contact.html" class="btn btn-primary btn-lg">Contact Us Online</a>

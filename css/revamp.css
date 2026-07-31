@@ -1420,123 +1420,6 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible { outline-color:
 }
 
 /* ============================================================
-   HERO, take two: light instead of dark
-   A cleaning company should look bright. The dark photo-with-scrim
-   treatment hid the work behind a wash of navy and read like every
-   agency landing page; here the copy sits on a light ground and the
-   photo is shown properly, at full contrast, beside it.
-   ============================================================ */
-.hero {
-  background: linear-gradient(180deg, #ffffff 0%, var(--brand-tint) 100%);
-  border-bottom: 1px solid var(--line);
-  padding-top: clamp(1.75rem, 5vw, 3.5rem);
-  padding-bottom: clamp(2rem, 5vw, 3.5rem);
-}
-
-.hero-grid {
-  display: grid;
-  gap: clamp(1.75rem, 4vw, 3.5rem);
-  align-items: center;
-}
-
-@media (min-width: 992px) {
-  .hero-grid {
-    grid-template-columns: 1.05fr 1fr;
-  }
-}
-
-.hero-copy h1 {
-  color: var(--brand-dark);
-  font-size: clamp(2.05rem, 6.4vw, 3.15rem);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  line-height: 1.08;
-  margin-bottom: 16px;
-  max-width: 15ch;
-}
-
-.hero-lead {
-  color: var(--muted);
-  font-size: clamp(1rem, 2.6vw, 1.14rem);
-  line-height: 1.65;
-  max-width: 46ch;
-  margin-bottom: 26px;
-}
-
-.hero-ctas {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 28px;
-}
-
-/* Ticks read as a checklist of facts, not a row of floating icons. */
-.hero-ticks {
-  list-style: none;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px 20px;
-  margin: 0;
-  padding: 22px 0 0;
-  border-top: 1px solid var(--line);
-}
-
-.hero-ticks li {
-  display: flex;
-  align-items: flex-start;
-  gap: 9px;
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: var(--brand-dark);
-  line-height: 1.35;
-}
-
-.hero-ticks li::before {
-  content: "";
-  flex: 0 0 17px;
-  height: 17px;
-  margin-top: 1px;
-  border-radius: 50%;
-  background: var(--accent-tint);
-  box-shadow: inset 0 0 0 1.5px var(--accent);
-  -webkit-mask: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5' fill='none' stroke='%23016036' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-  background-size: 12px 12px;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
-.hero-media img {
-  width: 100%;
-  aspect-ratio: 3 / 2;
-  object-fit: cover;
-  border-radius: var(--radius-lg);
-  box-shadow: 0 10px 24px rgba(13, 70, 113, 0.13), 0 30px 60px rgba(13, 70, 113, 0.11);
-}
-
-@media (max-width: 991.98px) {
-  /* Photo first on a phone: it says what the business does before any
-     text is read, and it keeps the fold from being a wall of words. */
-  .hero-grid {
-    gap: 1.5rem;
-  }
-
-  .hero-media {
-    order: -1;
-  }
-
-  .hero-media img {
-    aspect-ratio: 16 / 10;
-  }
-}
-
-@media (min-width: 400px) {
-  .hero-ticks {
-    gap: 12px 24px;
-  }
-}
-
-/* ============================================================
    Motion
    The staggered fade-up entrance was the loudest "generated page"
    signal on the site. Nothing on load now; hover and focus feedback
@@ -1560,4 +1443,128 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible { outline-color:
   width: auto;
   padding-left: 26px;
   padding-right: 26px;
+}
+
+/* ============================================================
+   HERO — full-bleed photo with the copy in front
+   The scrim is weighted to the left so the photograph stays visible
+   on the right rather than being flattened under an even wash of
+   navy. Type keeps its own shadow so legibility never depends on
+   darkening the whole image.
+   ============================================================ */
+.hero {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  min-height: clamp(430px, 68vh, 620px);
+  padding: clamp(2.5rem, 7vw, 4.5rem) 0;
+  background-image: url('../img/brighthero-720.webp');
+  background-size: cover;
+  background-position: center 62%;
+  background-repeat: no-repeat;
+  border-bottom: 5px solid var(--accent);
+}
+
+@media (min-width: 768px) {
+  .hero { background-image: url('../img/brighthero-960.webp'); }
+}
+
+@media (min-width: 1200px) {
+  .hero { background-image: url('../img/brighthero-1440.webp'); }
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-color: rgba(7, 20, 34, 0.42);
+  background-image: linear-gradient(
+    100deg,
+    rgba(7, 20, 34, 0.86) 0%,
+    rgba(7, 20, 34, 0.62) 46%,
+    rgba(7, 20, 34, 0.24) 100%
+  );
+}
+
+@media (min-width: 992px) {
+  .hero::before {
+    background-image: linear-gradient(
+      100deg,
+      rgba(7, 20, 34, 0.84) 0%,
+      rgba(7, 20, 34, 0.5) 42%,
+      rgba(7, 20, 34, 0.08) 100%
+    );
+  }
+}
+
+.hero-inner {
+  max-width: 34rem;
+  color: #fff;
+}
+
+.hero-inner h1 {
+  color: #fff;
+  font-size: clamp(2.1rem, 7vw, 3.4rem);
+  font-weight: 800;
+  line-height: 1.06;
+  letter-spacing: -0.03em;
+  margin-bottom: 14px;
+  text-shadow: 0 2px 6px rgba(4, 12, 22, 0.5), 0 8px 30px rgba(4, 12, 22, 0.4);
+}
+
+.hero-lead {
+  font-size: clamp(1rem, 2.7vw, 1.16rem);
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.93);
+  margin-bottom: 26px;
+  text-shadow: 0 1px 4px rgba(4, 12, 22, 0.55);
+}
+
+.hero-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 0;
+}
+
+.hero-ctas .btn {
+  box-shadow: 0 6px 20px rgba(4, 12, 22, 0.3);
+}
+
+.hero-ticks {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+  margin: 26px 0 0;
+  padding: 20px 0 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.hero-ticks li {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.83rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 1px 3px rgba(4, 12, 22, 0.55);
+}
+
+.hero-ticks li::before {
+  content: "";
+  flex: 0 0 15px;
+  height: 15px;
+  background-color: #7fd3a0;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5' fill='none' stroke='black' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5' fill='none' stroke='black' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+/* Brighter rug-page header photo replaces a 774px source. */
+.page-header--rug { background-image: url('../img/hdr-rug2-640.webp'); }
+
+@media (min-width: 992px) {
+  .page-header--rug { background-image: url('../img/hdr-rug2-960.webp'); }
 }
