@@ -53,7 +53,6 @@ begins.
 ## Pages
 
 - [Home](https://bearcarpetcare.com/): services, pricing and FAQs.
-- [About](https://bearcarpetcare.com/about.html): who runs the company and how they work.
 - [Reviews](https://bearcarpetcare.com/reviews.html): customer reviews.
 - [Gallery](https://bearcarpetcare.com/gallery.html): photographs of completed work.
 - [Contact](https://bearcarpetcare.com/contact.html): phone, email and quote request form.

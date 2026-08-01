@@ -253,8 +253,9 @@ strong { font-weight: 700; }
    group is closed and up when it is open, or it reads as "go somewhere else"
    rather than "expand". */
 .subnav-toggle .icon {
-  width: 0.8em;
-  height: 0.8em;
+  width: 0.58em;
+  height: 0.58em;
+  opacity: 0.62;
   transform: rotate(90deg);
   transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -304,12 +305,15 @@ strong { font-weight: 700; }
   .nav > ul > li { position: relative; }
   .nav > ul > li > a,
   .subnav-toggle {
-    display: block;
-    padding: 22px 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 22px 17px;
     font-weight: 600;
     font-size: 0.95rem;
     color: var(--ink);
     position: relative;
+    white-space: nowrap;
   }
   .nav > ul > li > a:hover,
   .subnav-toggle:hover { color: var(--navy-600); }
@@ -317,7 +321,7 @@ strong { font-weight: 700; }
   .nav [aria-current="page"]::after {
     content: "";
     position: absolute;
-    left: 14px; right: 14px; bottom: 0;
+    left: 17px; right: 17px; bottom: 0;
     height: 3px; border-radius: 3px 3px 0 0;
     background: var(--navy-600);
   }
@@ -558,28 +562,6 @@ strong { font-weight: 700; }
 /* ============================================================
    10. Service page blocks
    ============================================================ */
-.stat-strip {
-  position: relative;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1px;
-  background: var(--line);
-  border: 1px solid var(--line);
-  border-radius: var(--r);
-  overflow: clip;
-  margin-top: clamp(1.5rem, 4vw, 2.5rem);
-}
-@media (min-width: 768px) { .stat-strip { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
-.stat-strip > div { background: #fff; padding: 18px 16px; transition: background-color 0.2s; }
-.stat-strip > div:hover { background: var(--navy-tint); }
-.stat-strip dt { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
-.stat-strip dd { font-size: clamp(1rem, 2.5vw, 1.12rem); font-weight: 700; color: var(--navy-900); line-height: 1.3; }
-.stat-strip::after {
-  content: "";
-  position: absolute; inset: 0 0 auto; height: 3px;
-  background: var(--green); transform-origin: left center;
-}
-
 .checklist { display: grid; gap: 8px 26px; grid-template-columns: repeat(auto-fit, minmax(min(230px, 100%), 1fr)); }
 .checklist li {
   display: flex; align-items: flex-start; gap: 10px;
@@ -633,6 +615,24 @@ strong { font-weight: 700; }
   padding: 34px 22px 16px;
   color: #fff; font-size: 0.88rem; font-weight: 600;
   background: linear-gradient(to top, rgb(7 20 34 / 85%), rgb(7 20 34 / 0%));
+}
+
+/* One figure, stated once, instead of a four-cell table repeating what
+   the hero and footer already say. */
+.big-stat {
+  font-size: clamp(3.5rem, 12vw, 5rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--navy);
+}
+.big-stat small {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  color: var(--muted);
+  margin-top: 6px;
 }
 
 /* ============================================================
@@ -820,12 +820,14 @@ strong { font-weight: 700; }
 .gallery figure:hover img { transform: scale(1.05); }
 .gallery figcaption { padding: 10px 14px; font-size: 0.85rem; color: var(--muted); }
 
+/* Full-bleed band, edge to edge, rather than a rounded card inside the
+   content column. It is the closing call on every page, so it gets the
+   full width of the screen. */
 .cta {
   background-color: var(--navy-900);
   background-image: linear-gradient(135deg, #0b2438 0%, var(--navy) 100%);
   color: #fff;
-  border-radius: var(--r-lg);
-  padding: clamp(2rem, 6vw, 3.25rem) clamp(1.25rem, 5vw, 3rem);
+  padding-block: clamp(2.25rem, 6vw, 3.75rem);
   text-align: center;
 }
 .cta h2 { color: #fff; margin-bottom: 10px; }
@@ -928,8 +930,7 @@ strong { font-weight: 700; }
     .steps::before { animation: draw-down linear both; animation-timeline: view(); animation-range: entry 25% cover 55%; }
     .rule::before { animation: extend-rule linear both; animation-timeline: view(); animation-range: entry 15% entry 85%; }
     .checklist li::before { animation: tick-in cubic-bezier(0.34, 1.56, 0.64, 1) both; animation-timeline: view(); animation-range: entry 0% entry 100%; }
-    .stat-strip::after { animation: extend-rule linear both; animation-timeline: view(); animation-range: entry 20% cover 25%; }
-  }
+      }
 }
 
 /* <details> snaps open without this; interpolate-size lets the height

@@ -61,7 +61,6 @@ NAV = [
     ("Pricing", "index.html#pricing", None),
     ("Reviews", "reviews.html", None),
     ("Gallery", "gallery.html", None),
-    ("About", "about.html", None),
     ("Contact", "contact.html", None),
 ]
 
@@ -77,18 +76,32 @@ PRICES = [
          notes=["Free pick-up and delivery", "Cleaned at our facility", "Repairs quoted separately"], feature=False),
 ]
 
+# Transcribed verbatim from the Google reviews shown on
+# carpetcleanerharrisburg.com/testimonials. Do not paraphrase these: they are
+# attributed to named people. `short` marks the ones used on the home page.
 REVIEWS = [
-    ("Celeste Chicoine", "2025-07-24", "Bear Carpet Care did a great job for us. They were very nice and care about the work they do."),
-    ("gary barnes", "2025-07-09", "The job they did was INCREDIBLE. With having six dogs our carpets were in BAD shape and now they look brand new."),
-    ("Bertie Spalding", "2025-07-19", "Quick call back, met, measured, agreed on price, whole house cleaned &amp; scotchguarded today while I sat on the front porch."),
-    ("Julie Myers", "2025-07-17", "Carpets look great and smell fresh! Great job! Appreciate your hard work in getting out stains too!"),
-    ("Francis family", "2025-07-15", "We had an amazing experience with this family-owned carpet cleaning company! Every stain and pet odor we were worried about is completely gone."),
-    ("E E", "2025-07-10", "Thanks, Dave &amp; Corey! Carpet looks great! Thank you for the time you spent working on those oil stains!"),
-    ("Mor Ovadia", "2025-07-21", "These guys were just great. They cleaned my chairs, my couch and picked up my 8x11 oriental rug to clean."),
-    ("Jen", "2025-07-08", "Dave was quick to respond and set up an appointment. He arrived early and was super quick, professional and reasonably priced!"),
-    ("Lauren", "2025-07-05", "They were very professional and efficient, and they did a great job cleaning out the carpets in our bedrooms."),
-    ("Marisa Francis", "2025-07-01", "Professional and quick. We have 2 dogs and 4 cats so needless to say, regular carpet cleaning is required."),
-    ("Roni C.", "2025-06-03", "Dave did an amazing job cleaning the carpets in two rooms and the steps in my home. The carpets look brand new and smell fresh."),
+    ("Celeste Chicoine", "2025-07-24", True,
+     "Bear Carpet Care did a great job for us. They were very nice and care about the work they do. They were very thorough. We would definitely use them again"),
+    ("gary barnes", "2025-07-09", True,
+     "The job they did was INCREDIBLE. With having six dogs our carpets were in BAD shape and now they look brand new. We highly recommend this company!"),
+    ("Julie Myers", "2025-07-17", True,
+     "This was first time using Bear Carpet Care. Carpets look great and smell fresh! Great job! Appreciate your hard work in getting out stains too!"),
+    ("Jen", "2025-07-08", True,
+     "Dave was quick to respond and set up an appointment. He arrived early and went over my options. He was super quick, professional and reasonably priced!"),
+    ("Bertie Spalding", "2025-07-19", False,
+     "I picked this business after Googling for a professional cleaning of a house I was purchasing. Quick call back, met, measured, agreed on price, whole house cleaned &amp; scotchguarded today while I sat on the front porch. Very friendly! Highly recommend!"),
+    ("Mor Ovadia", "2025-07-21", False,
+     "Hey These guys were just great. They cleaned my chairs, my couch and picked up my 8x11 oriental rug to clean. They were Very good. I was very happy with the service. I will recommend them to my family and friends."),
+    ("E E", "2025-07-10", False,
+     "Thanks, Dave &amp; Corey! Carpet looks great! Thank you for the time you spent working on those oil stains! There all gone! Excellent work! We highly recommend Bear Carpet Care."),
+    ("Francis family", "2025-07-15", False,
+     "We had an amazing experience with this family-owned carpet cleaning company! They cleaned all our carpets and stairs, and the results were outstanding. Every stain and pet odor we were worried about is completely gone \u2014 it looks and smells like new again! The team was professional, friendly, and clearly took pride in their work. It\u2019s refreshing to find a company that truly cares about quality and customer satisfaction. Highly recommend them to anyone needing carpet or upholstery cleaning. We\u2019ll definitely be using them again!"),
+    ("Lauren", "2025-07-05", False,
+     "They were very professional and efficient, and they did a great job cleaning out the carpets in our bedrooms before we moved into our house. The carpets looked and smelled great afterwards, and I will definitely use them in the future for steam cleaning carpets and rugs."),
+    ("Marisa Francis", "2025-07-01", False,
+     "Professional and quick. We have 2 dogs and 4 cats so needless to say, regular carpet cleaning is required. First time using Bear Carpetcare and we will use them again. Highly recommend!"),
+    ("Roni C.", "2025-06-03", False,
+     "Dave did an amazing job cleaning the carpets in two rooms and the steps in my home. He was professional, on time, and super friendly. The carpets look brand new and smell fresh, and he took extra care to make sure everything was done right. You can tell he really takes pride in his work. I highly recommend Dave if you\u2019re looking for quality carpet cleaning and great service!"),
 ]
 
 SPRITE = (ROOT / "_sprite.html").read_text().strip()
@@ -281,22 +294,22 @@ def pricing_block():
 """
 
 
-def reviews_block(limit=None, scroller=True):
-    items = REVIEWS[:limit] if limit else REVIEWS
+def reviews_block(short_only=False, scroller=True):
+    items = [r for r in REVIEWS if r[2]] if short_only else REVIEWS
     cards = "".join(
         f'<figure class="review"><div class="stars" aria-hidden="true">★★★★★</div>'
         f'<span class="visually-hidden">Rated 5 out of 5</span>'
         f'<blockquote>“{t}”</blockquote>'
         f'<figcaption>{n}<time datetime="{d}">{d}</time></figcaption></figure>'
-        for n, d, t in items)
+        for n, d, _, t in items)
     cls = "review-scroller" if scroller else "reviews"
     hint = '<span class="hint">Swipe for more →</span>' if scroller else ""
     return f'<div class="{cls}">{cards}</div>{hint}'
 
 
 def cta(title, sub):
-    return f"""    <section class="wrap section">
-        <div class="cta">
+    return f"""    <section class="cta">
+        <div class="wrap">
             <h2>{title}</h2>
             <p>{sub}</p>
             <div class="btn-row">
@@ -528,7 +541,6 @@ SERVICES = {
 
 
 def service_page(slug, s):
-    stats = "".join(f"<div><dt>{k}</dt><dd>{v}</dd></div>" for k, v in s["stats"])
     inc = "".join(f"<li>{i}</li>" for i in s["included"])
     steps = "".join(f"<li><h3>{t}</h3><p>{d}</p></li>" for t, d in s["steps"])
     notes = "".join(f'<div class="note">{icon(i)}<h3>{t}</h3><p>{d}</p></div>' for i, t, d in s["notes"])
@@ -543,8 +555,6 @@ def service_page(slug, s):
                 <a href="{BIZ['phone_href']}" class="btn btn-call btn-lg">{icon('phone')}Call {BIZ['phone_display']}</a>
             </div>
         </div>
-
-        <dl class="stat-strip">{stats}</dl>
 
         <div class="split" style="margin-top:var(--section-y)">
             <div>
@@ -642,14 +652,8 @@ def home():
                 <p>Bear Carpet Care is family-owned and locally operated in Harrisburg. Dave and the team
                    have been cleaning carpet, upholstery and rugs across Central PA for more than three decades,
                    using non-toxic products that are safe around pets and children.</p>
-                <p><a href="about.html">More about us</a></p>
             </div>
-            <dl class="stat-strip" style="margin:0">
-                <div><dt>Experience</dt><dd><span data-count="30">30</span>+ years</dd></div>
-                <div><dt>Owned by</dt><dd>A local family</dd></div>
-                <div><dt>Serving</dt><dd>Central PA</dd></div>
-                <div><dt>Quotes</dt><dd>Free</dd></div>
-            </dl>
+            <p class="big-stat"><span data-count="30">30</span>+<small>years in Harrisburg</small></p>
         </div>
     </section>
 
@@ -659,7 +663,7 @@ def home():
                 <h2 class="rule">What our customers say</h2>
                 <p><a href="reviews.html">Read all reviews</a></p>
             </div>
-            {reviews_block(limit=4)}
+            {reviews_block(short_only=True)}
         </div>
     </section>
 
@@ -675,63 +679,6 @@ def home():
     return write(slug, page, body)
 
 
-# ---------------------------------------------------------------- about
-def about():
-    slug = "about.html"
-    trail = [("Home", "index.html"), ("About", None)]
-    areas = "".join(f"<li>{a}, PA</li>" for a in AREAS)
-    body = page_head_block("About Bear Carpet Care", trail, "head-upholstery") + f"""
-    <section class="wrap section">
-        <p class="lead">Bear Carpet Care is a <strong>family-owned and locally operated</strong> cleaning
-           company in Harrisburg, Pennsylvania, with more than {BIZ['years']} years in the trade.</p>
-
-        <div class="split" style="margin-top:var(--section-y)">
-            <div>
-                <h2 class="rule">Who you are dealing with</h2>
-                <p>We are a small local outfit, not a franchise. The person who quotes your job is the person
-                   who turns up to do it, which is why so many of our reviews mention Dave by name.</p>
-                <p>Three decades in, most of our work comes from people who have used us before or been sent
-                   by someone who has.</p>
-            </div>
-            <div>
-                <h2 class="rule">How we work</h2>
-                <ul class="checklist">
-                    <li>Non-toxic, hypoallergenic, biodegradable solutions</li>
-                    <li>Safe around children, pets and allergy sufferers</li>
-                    <li>Price agreed before we start</li>
-                    <li>Rugs cleaned at our own facility</li>
-                    <li>Free quotes, no obligation</li>
-                    <li>Same business day reply, usually</li>
-                </ul>
-            </div>
-        </div>
-
-        <dl class="stat-strip">
-            <div><dt>In business</dt><dd><span data-count="30">30</span>+ years</dd></div>
-            <div><dt>Based in</dt><dd>{BIZ['city']}, {BIZ['region']} {BIZ['zip']}</dd></div>
-            <div><dt>Ownership</dt><dd>Family-owned</dd></div>
-            <div><dt>Hours</dt><dd>7 days a week</dd></div>
-        </dl>
-
-        <figure class="band">
-            <img src="img/carpet-cleaning-3-1280.webp"
-                 srcset="img/carpet-cleaning-3-640.webp 640w, img/carpet-cleaning-3-1280.webp 1280w"
-                 sizes="(min-width: 992px) 1080px, 100vw"
-                 alt="Bear Carpet Care cleaning a carpet in a Harrisburg, PA home"
-                 width="1280" height="864" loading="lazy" decoding="async">
-            <figcaption>Thirty years of the same work, done properly</figcaption>
-        </figure>
-
-        <h2 class="rule">Where we work</h2>
-        <ul class="checklist">{areas}</ul>
-    </section>
-
-{cta('Want a quote?', 'Free and no obligation, anywhere in Central Pennsylvania.')}"""
-    page = dict(slug=slug, title=f"About Us | {BIZ['name']}, Harrisburg PA",
-                desc="Bear Carpet Care is a family-owned carpet, upholstery and rug cleaning company in Harrisburg, PA with over 30 years of experience. Serving Central Pennsylvania.",
-                schema=ld(business(), website(), crumbs_ld(slug, trail),
-                          webpage(slug, "About Bear Carpet Care", ("AboutPage",))))
-    return write(slug, page, body)
 
 
 # ---------------------------------------------------------------- reviews
@@ -810,7 +757,6 @@ def gallery():
 def contact():
     slug = "contact.html"
     trail = [("Home", "index.html"), ("Contact", None)]
-    hours = "".join(f"<div><dt>{d}</dt><dd>{t}</dd></div>" for d, t in HOURS)
     MAP = ("https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d495471.83057429155!2d-77.10622490514357"
            "!3d40.274299078759906!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c9c132db7bfb3f"
            "%3A0x3fc7795a8d802f20!2sHarrisburg%2C%20PA!5e0!3m2!1sen!2sus!4v1716574863725!5m2!1sen!2sus")
@@ -855,7 +801,6 @@ def contact():
                     <a href="mailto:{BIZ['email']}">{icon('mail')}<span><small>Email</small><strong>{BIZ['email']}</strong></span></a>
                     <div>{icon('pin')}<span><small>Based in</small><strong>{BIZ['city']}, {BIZ['region']} {BIZ['zip']}</strong></span></div>
                 </div>
-                <dl class="stat-strip">{hours}</dl>
                 <div class="map" style="margin-top:var(--gap)">
                     <button type="button" data-map="{MAP}">{icon('pin')}<strong>View our service area</strong>
                         <span>Tap to load the map of Harrisburg, PA</span></button>
@@ -903,7 +848,6 @@ if __name__ == "__main__":
     counts = {"index.html": home()}
     for slug, s in SERVICES.items():
         counts[slug] = service_page(slug, s)
-    counts["about.html"] = about()
     counts["reviews.html"] = reviews_page()
     counts["gallery.html"] = gallery()
     counts["contact.html"] = contact()
