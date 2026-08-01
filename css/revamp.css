@@ -1866,3 +1866,134 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible { outline-color:
   box-shadow: var(--shadow-md);
   transform: translateY(-2px);
 }
+
+/* ============================================================
+   MORE MOTION
+   Same rules as before: nothing fades, nothing that carries
+   content can end up invisible, and everything is behind
+   @supports plus a reduced-motion guard. These are all either
+   compositor-only (transform) or driven by the visitor's pointer.
+   ============================================================ */
+
+/* --- Sticky header lifts off the page once you scroll ---------
+   Shadow only, so the header never changes height and the page
+   below it never reflows. */
+@keyframes header-lift {
+  from { box-shadow: 0 1px 0 var(--line), 0 2px 14px rgba(10, 16, 38, 0.05); }
+  to   { box-shadow: 0 1px 0 var(--line), 0 8px 28px rgba(10, 16, 38, 0.16); }
+}
+
+/* --- Ticks land as each row reaches the viewport --------------
+   Per-item view() timelines give the stagger for free; no delays
+   to keep in sync and no JavaScript. */
+@keyframes tick-in {
+  from { transform: scale(0.2) rotate(-12deg); }
+  to   { transform: none; }
+}
+
+/* --- The stat strip fills left to right ----------------------- */
+@keyframes sweep-across {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+.stat-strip {
+  position: relative;
+}
+
+.stat-strip::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 3px;
+  background: var(--accent);
+  transform-origin: left center;
+}
+
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .site-navbar {
+      animation: header-lift linear both;
+      animation-timeline: scroll();
+      animation-range: 0 140px;
+    }
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .included li::before {
+      animation: tick-in cubic-bezier(0.34, 1.56, 0.64, 1) both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 100%;
+    }
+
+    .stat-strip::after {
+      animation: sweep-across linear both;
+      animation-timeline: view();
+      animation-range: entry 20% cover 25%;
+    }
+  }
+}
+
+/* --- Pointer-driven: these respond to the visitor -------------- */
+.btn i {
+  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.btn:hover i,
+.btn:focus-visible i {
+  transform: translateX(-2px) scale(1.06);
+}
+
+.footer-links a i,
+.related-service {
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.footer-links a:hover i {
+  transform: translateX(3px);
+}
+
+.testimonial-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.testimonial-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: #cddcff;
+}
+
+.stat-strip div {
+  transition: background-color 0.2s ease;
+}
+
+.stat-strip div:hover {
+  background-color: var(--brand-tint);
+}
+
+/* --- FAQ opens and closes smoothly ---------------------------
+   <details> jumps open by default. interpolate-size lets the
+   height animate from a keyword; browsers without it keep the
+   instant toggle, which is the current behaviour. */
+@supports (interpolate-size: allow-keywords) {
+  @media (prefers-reduced-motion: no-preference) {
+    :root {
+      interpolate-size: allow-keywords;
+    }
+
+    .faq-item::details-content {
+      block-size: 0;
+      overflow: clip;
+      transition: block-size 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+                  content-visibility 0.32s allow-discrete;
+    }
+
+    .faq-item[open]::details-content {
+      block-size: auto;
+    }
+  }
+}
