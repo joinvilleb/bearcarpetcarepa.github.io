@@ -843,7 +843,24 @@ strong { font-weight: 700; }
   padding-top: var(--section-y);
   margin-top: var(--section-y);
 }
-.site-footer .wrap > .cols { align-items: start; }
+
+/* The closing call to action is a full-bleed dark band, and the footer is
+   dark too. The footer's top margin leaves a white stripe between them, so
+   drop it when a CTA is the last thing on the page. Contact has no CTA and
+   keeps the gap. */
+main:has(> .cta:last-child) + .site-footer { margin-top: 0; }
+/* The shared .cols minimum is 270px, which only fits three columns inside
+   the 1140px wrap, so the Hours column dropped to a second row. The footer
+   needs its own track sizes. */
+.site-footer .cols { align-items: start; grid-template-columns: 1fr; }
+
+@media (min-width: 640px) {
+  .site-footer .cols { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (min-width: 960px) {
+  .site-footer .cols { grid-template-columns: 1.7fr 1.2fr 1fr 1fr; }
+}
 .site-footer h2 { font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.09em; color: #fff; margin-bottom: 12px; }
 .site-footer p { font-size: 0.92rem; }
 .site-footer a { color: #fff; text-decoration: none; }
@@ -853,7 +870,19 @@ strong { font-weight: 700; }
 .footer-links .icon { width: 0.7em; height: 0.7em; transition: transform 0.2s; }
 .footer-links a:hover .icon { transform: translateX(3px); }
 .footer-contact a { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-size: 0.95rem; overflow-wrap: anywhere; }
-.footer-hours { font-size: 0.88rem; }
+/* Day and time on one line in two aligned columns, so this column has the
+   same rhythm as the Services list beside it instead of ragged <br> pairs. */
+.hours { display: grid; gap: 2px; }
+.hours > div {
+  display: grid;
+  grid-template-columns: 5.5rem 1fr;
+  gap: 10px;
+  align-items: baseline;
+  min-height: 30px;
+  font-size: 0.9rem;
+}
+.hours dt { color: rgb(233 239 244 / 72%); }
+.hours dd { font-variant-numeric: tabular-nums; white-space: nowrap; }
 .socials { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
 .socials a {
   width: 44px; height: 44px;

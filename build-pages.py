@@ -202,7 +202,7 @@ def footer():
     socs = "".join(
         f'<a href="{url}" target="_blank" rel="noopener" aria-label="{BIZ["name"]} on {label}">{icon(k)}</a>'
         for k, label, url in SOCIALS)
-    hours = "".join(f'<p class="footer-hours">{d}<br>{t}</p>' for d, t in HOURS)
+    hours = "".join(f"<div><dt>{d}</dt><dd>{t}</dd></div>" for d, t in HOURS)
     return f"""</main>
 
 <footer class="site-footer">
@@ -231,7 +231,7 @@ def footer():
             </div>
             <div>
                 <h2>Hours (ET)</h2>
-                {hours}
+                <dl class="hours">{hours}</dl>
             </div>
         </div>
         <div class="footer-bottom">
