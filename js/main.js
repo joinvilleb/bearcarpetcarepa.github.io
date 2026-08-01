@@ -1,192 +1,136 @@
-/*!
- * Bear Carpet Care — site behaviour.
+/*! Bear Carpet Care — site behaviour.
  *
- * Replaces jQuery 3.4.1, Bootstrap 4 JS bundle, easing, waypoints, counterup,
- * Owl Carousel, Isotope and Lightbox (~370KB) with the handful of behaviours
- * this site actually uses. Loaded with `defer`, so the DOM is ready on execute.
+ * No framework. Everything here is progressive: with JavaScript off the
+ * navigation still renders (CSS :hover opens the desktop submenu), links
+ * work, and no content is hidden.
  */
 (function () {
   "use strict";
 
-  var prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var $ = function (s, c) { return (c || document).querySelector(s); };
+  var $$ = function (s, c) { return [].slice.call((c || document).querySelectorAll(s)); };
 
-  /* ---------------------------------------------------------------
-   * Navbar: mobile collapse toggle
-   * ------------------------------------------------------------- */
-  var toggler = document.querySelector('.navbar-toggler[data-target]');
-  var collapse = toggler && document.querySelector(toggler.getAttribute('data-target'));
+  /* --- Navigation ---------------------------------------------- */
+  var toggle = $(".nav-toggle");
+  var nav = $("#nav");
 
-  function setCollapsed(open) {
-    if (!collapse) return;
-    collapse.classList.toggle('show', open);
-    toggler.setAttribute('aria-expanded', open ? 'true' : 'false');
+  function setNav(open) {
+    if (!nav) return;
+    nav.toggleAttribute("data-open", open);
+    toggle.setAttribute("aria-expanded", open ? "true" : "false");
   }
 
-  if (toggler && collapse) {
-    toggler.setAttribute('aria-expanded', 'false');
-    toggler.setAttribute('aria-controls', collapse.id);
-    toggler.addEventListener('click', function (e) {
-      e.preventDefault();
-      setCollapsed(!collapse.classList.contains('show'));
+  if (toggle && nav) {
+    toggle.addEventListener("click", function () {
+      setNav(!nav.hasAttribute("data-open"));
     });
   }
 
-  /* ---------------------------------------------------------------
-   * Navbar: Services dropdown.
-   * Desktop hover is handled in CSS; this covers click / keyboard,
-   * which is the only way to open it on touch devices.
-   * ------------------------------------------------------------- */
-  var dropdowns = [].slice.call(document.querySelectorAll('.nav-item.dropdown'));
-
-  function closeDropdowns(except) {
-    dropdowns.forEach(function (d) {
-      if (d === except) return;
-      d.classList.remove('show');
-      var m = d.querySelector('.dropdown-menu');
-      var t = d.querySelector('.dropdown-toggle');
-      if (m) m.classList.remove('show');
-      if (t) t.setAttribute('aria-expanded', 'false');
-    });
-  }
-
-  dropdowns.forEach(function (drop) {
-    var toggle = drop.querySelector('.dropdown-toggle');
-    var menu = drop.querySelector('.dropdown-menu');
-    if (!toggle || !menu) return;
-
-    toggle.setAttribute('aria-expanded', 'false');
-    toggle.setAttribute('aria-haspopup', 'true');
-
-    toggle.addEventListener('click', function (e) {
-      e.preventDefault();
-      var open = !menu.classList.contains('show');
-      closeDropdowns(drop);
-      drop.classList.toggle('show', open);
-      menu.classList.toggle('show', open);
-      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  // Submenu. On desktop CSS handles hover; this covers touch and keyboard.
+  $$(".subnav-toggle").forEach(function (btn) {
+    var parent = btn.closest(".has-sub");
+    btn.addEventListener("click", function () {
+      var open = !parent.hasAttribute("data-open");
+      $$(".has-sub").forEach(function (p) { p.removeAttribute("data-open"); });
+      parent.toggleAttribute("data-open", open);
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
     });
   });
 
-  document.addEventListener('click', function (e) {
-    if (!e.target.closest('.nav-item.dropdown')) closeDropdowns(null);
-    if (collapse && collapse.classList.contains('show') && !e.target.closest('.site-navbar')) {
-      setCollapsed(false);
+  document.addEventListener("click", function (e) {
+    if (!e.target.closest(".has-sub")) {
+      $$(".has-sub").forEach(function (p) {
+        p.removeAttribute("data-open");
+        var t = $(".subnav-toggle", p);
+        if (t) t.setAttribute("aria-expanded", "false");
+      });
     }
+    if (nav && nav.hasAttribute("data-open") && !e.target.closest(".site-header")) setNav(false);
   });
 
-  document.addEventListener('keydown', function (e) {
-    if (e.key !== 'Escape') return;
-    closeDropdowns(null);
-    setCollapsed(false);
+  document.addEventListener("keydown", function (e) {
+    if (e.key !== "Escape") return;
+    setNav(false);
+    $$(".has-sub").forEach(function (p) { p.removeAttribute("data-open"); });
   });
 
-  /* ---------------------------------------------------------------
-   * Back-to-top button
-   * ------------------------------------------------------------- */
-  var backToTop = document.querySelector('.back-to-top');
-  if (backToTop) {
+  /* --- Back to top --------------------------------------------- */
+  var top = $(".to-top");
+  if (top) {
     var ticking = false;
     var onScroll = function () {
       if (ticking) return;
       ticking = true;
-      window.requestAnimationFrame(function () {
-        backToTop.classList.toggle('is-visible', window.pageYOffset > 300);
+      requestAnimationFrame(function () {
+        top.toggleAttribute("data-visible", window.pageYOffset > 300);
         ticking = false;
       });
     };
-    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
-
-    backToTop.addEventListener('click', function (e) {
+    top.addEventListener("click", function (e) {
       e.preventDefault();
-      window.scrollTo({ top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+      window.scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" });
     });
   }
 
-  /* ---------------------------------------------------------------
-   * "30 Years Experience" count-up, fired when it scrolls into view
-   * ------------------------------------------------------------- */
-  var counters = [].slice.call(document.querySelectorAll('[data-toggle="counter-up"]'));
-
-  function runCounter(el) {
-    var target = parseInt(el.textContent.replace(/\D/g, ''), 10);
-    if (!target || prefersReducedMotion) return;
-    var duration = 1600;
-    var start = null;
-
-    el.textContent = '0';
+  /* --- Count up ------------------------------------------------- */
+  var counters = $$("[data-count]");
+  function run(el) {
+    var target = parseInt(el.getAttribute("data-count"), 10);
+    if (!target || reduced) { el.textContent = String(target || el.textContent); return; }
+    var start = null, duration = 1500;
+    el.textContent = "0";
     (function step(now) {
       if (start === null) start = now;
-      var progress = Math.min((now - start) / duration, 1);
-      // easeOutQuad, so it settles rather than stopping dead
-      el.textContent = Math.round(target * (1 - (1 - progress) * (1 - progress)));
-      if (progress < 1) window.requestAnimationFrame(step);
-    })(window.performance.now());
+      var p = Math.min((now - start) / duration, 1);
+      el.textContent = String(Math.round(target * (1 - (1 - p) * (1 - p))));
+      if (p < 1) requestAnimationFrame(step);
+    })(performance.now());
   }
-
-  if (counters.length) {
-    if ('IntersectionObserver' in window) {
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (!entry.isIntersecting) return;
-          runCounter(entry.target);
-          io.unobserve(entry.target);
-        });
-      }, { threshold: 0.4 });
-      counters.forEach(function (c) { io.observe(c); });
-    } else {
-      counters.forEach(runCounter);
-    }
-  }
-
-  /* ---------------------------------------------------------------
-   * Hide the sticky call bar once the footer is on screen. By then the
-   * phone number and email are visible in the footer itself, so the bar
-   * is just covering content — including, at some scroll positions, the
-   * footer text it sits on top of.
-   * ------------------------------------------------------------- */
-  var callbar = document.querySelector('.callbar');
-  var siteFooter = document.querySelector('.site-footer');
-
-  if (callbar && siteFooter && 'IntersectionObserver' in window) {
-    new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        callbar.classList.toggle('callbar-hidden', entry.isIntersecting);
+  if (counters.length && "IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        run(en.target);
+        io.unobserve(en.target);
       });
-    }, { rootMargin: '0px 0px -40px 0px' }).observe(siteFooter);
+    }, { threshold: 0.4 });
+    counters.forEach(function (c) { io.observe(c); });
+  } else {
+    counters.forEach(run);
   }
 
-  /* ---------------------------------------------------------------
-   * Google Maps facade — the embed only loads once the user asks for
-   * it, keeping ~900KB of third-party JS off the critical path.
-   * ------------------------------------------------------------- */
-  var mapFacade = document.querySelector('[data-map-embed]');
-  if (mapFacade) {
-    var loadMap = function () {
-      var iframe = document.createElement('iframe');
-      iframe.src = mapFacade.getAttribute('data-map-embed');
-      iframe.title = 'Map of the Bear Carpet Care service area around Harrisburg, Pennsylvania';
-      iframe.loading = 'lazy';
-      iframe.referrerPolicy = 'no-referrer-when-downgrade';
-      iframe.allowFullscreen = true;
-      iframe.width = '100%';
-      iframe.height = '100%';
-      iframe.style.border = '0';
-      iframe.style.position = 'absolute';
-      iframe.style.inset = '0';
-      mapFacade.innerHTML = '';
-      mapFacade.appendChild(iframe);
-      mapFacade.removeAttribute('data-map-embed');
-    };
-    mapFacade.addEventListener('click', loadMap);
-    mapFacade.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); loadMap(); }
+  /* --- Hide the call bar once the footer is reached -------------
+   * By then the number is on screen anyway, and the bar would only be
+   * covering content. */
+  var bar = $(".callbar");
+  var footer = $(".site-footer");
+  if (bar && footer && "IntersectionObserver" in window) {
+    new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { bar.toggleAttribute("data-hidden", en.isIntersecting); });
+    }, { rootMargin: "0px 0px -40px 0px" }).observe(footer);
+  }
+
+  /* --- Map loads on request ------------------------------------
+   * The embed pulls roughly 900KB of third-party JavaScript, so it stays
+   * off the critical path until someone actually wants the map. */
+  var mapBtn = $("[data-map]");
+  if (mapBtn) {
+    mapBtn.addEventListener("click", function () {
+      var f = document.createElement("iframe");
+      f.src = mapBtn.getAttribute("data-map");
+      f.title = "Map of the Bear Carpet Care service area around Harrisburg, Pennsylvania";
+      f.loading = "lazy";
+      f.referrerPolicy = "no-referrer-when-downgrade";
+      f.allowFullscreen = true;
+      mapBtn.parentNode.appendChild(f);
+      mapBtn.remove();
     });
   }
 
-  /* ---------------------------------------------------------------
-   * Copyright year
-   * ------------------------------------------------------------- */
-  var yearEl = document.getElementById('copy-year');
-  if (yearEl) yearEl.textContent = new Date().getFullYear();
+  /* --- Year ------------------------------------------------------ */
+  var year = $("#year");
+  if (year) year.textContent = new Date().getFullYear();
 })();
