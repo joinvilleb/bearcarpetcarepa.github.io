@@ -1,24 +1,21 @@
 /*! Bear Carpet Care — contact form.
  *
- * GitHub Pages serves static files only, so the old mail/contact.php could
- * never run and every submission fell through to an error. Until a form
- * endpoint exists, a valid submission hands off to the visitor's email
- * client with everything filled in.
- *
- * TO RECEIVE SUBMISSIONS SERVER-SIDE:
- *   1. Create a free endpoint (Formspree, Web3Forms, Basin, ...).
- *   2. Paste the URL into ENDPOINT below.
- * The form then POSTs there and shows the inline success message instead.
+ * GitHub Pages serves static files only, so the old mail/contact.php could never run. Submissions
+ * now POST to the WebEaze form endpoint, which emails the owner and records the inquiry in the
+ * WebEaze portal. If that call fails, the original mailto: hand-off below is still the fallback.
  */
 (function () {
   "use strict";
 
-  var ENDPOINT = ""; // e.g. "https://formspree.io/f/xxxxxxxx"
   var MAILTO = "bearcarpetcarepa@gmail.com";
   var PHONE = "(717) 454-7347";
 
   var form = document.getElementById("quote-form");
   if (!form) return;
+
+  // Where the form posts is declared once, on the form itself, so the no-JavaScript path and this
+  // one can never drift apart — and so track.js can see the URL and not count the lead twice.
+  var ENDPOINT = form.getAttribute("action") || "";
 
   var status = document.getElementById("form-status");
   var button = form.querySelector("[type=submit]");

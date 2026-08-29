@@ -770,7 +770,7 @@ def contact():
             <div>
                 <h2 class="rule">Send us a message</h2>
                 <div id="form-status" aria-live="polite"></div>
-                <form id="quote-form" novalidate>
+                <form id="quote-form" novalidate method="POST" action="https://gmgzhjxfypuyzzgqwona.supabase.co/functions/v1/form-lead/65995a53-f1e8-4ff1-a0d4-3b15b126d1ca">
                     <div class="field">
                         <label for="name">Your name</label>
                         <input type="text" id="name" name="name" autocomplete="name" required data-msg="Please enter your name">
