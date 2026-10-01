@@ -43,6 +43,10 @@
   function say(kind, html) {
     if (!status) return;
     status.innerHTML = '<div class="alert alert-' + kind + '" role="alert">' + html + "</div>";
+    // The message sits above the form, which is usually scrolled out of view
+    // by the time someone presses send, especially on a phone.
+    var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    status.scrollIntoView({ block: "center", behavior: reduced ? "auto" : "smooth" });
   }
 
   form.addEventListener("submit", function (e) {

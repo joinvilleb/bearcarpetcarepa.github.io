@@ -17,19 +17,19 @@ treats a mass redirect to one URL as a soft 404 and drops the value.
 | carpetcleanerharrisburg.com | bearcarpetcare.com |
 |---|---|
 | `/` | `/` |
-| `/about_us` | `/about.html` |
-| `/carpet-cleaning` | `/carpet-cleaning.html` |
-| `/stain-removal` | `/carpet-cleaning.html` |
-| `/pet-stain-removal` | `/carpet-cleaning.html` |
-| `/area-rug-cleaning` | `/oriental-rug-cleaning.html` |
-| `/oriental-rug-cleaning` | `/oriental-rug-cleaning.html` |
-| `/testimonials` | `/reviews.html` |
-| `/gallery` | `/gallery.html` |
-| `/contact` | `/contact.html` |
+| `/about_us` | `/` |
+| `/carpet-cleaning` | `/carpet-cleaning` |
+| `/stain-removal` | `/carpet-cleaning` |
+| `/pet-stain-removal` | `/carpet-cleaning` |
+| `/area-rug-cleaning` | `/oriental-rug-cleaning` |
+| `/oriental-rug-cleaning` | `/oriental-rug-cleaning` |
+| `/testimonials` | `/reviews` |
+| `/gallery` | `/gallery` |
+| `/contact` | `/contact` |
 | anything else | `/` |
 
 There is no upholstery page on the old site, so nothing maps to
-`/upholstery-cleaning.html`.
+`/upholstery-cleaning`.
 
 ## Where to set it
 
@@ -44,15 +44,15 @@ page-level mapping.
 
 ```
 # _redirects  (Netlify / Cloudflare Pages)
-/about_us              https://bearcarpetcare.com/about.html            301!
-/carpet-cleaning       https://bearcarpetcare.com/carpet-cleaning.html  301!
-/stain-removal         https://bearcarpetcare.com/carpet-cleaning.html  301!
-/pet-stain-removal     https://bearcarpetcare.com/carpet-cleaning.html  301!
-/area-rug-cleaning     https://bearcarpetcare.com/oriental-rug-cleaning.html 301!
-/oriental-rug-cleaning https://bearcarpetcare.com/oriental-rug-cleaning.html 301!
-/testimonials          https://bearcarpetcare.com/reviews.html          301!
-/gallery               https://bearcarpetcare.com/gallery.html          301!
-/contact               https://bearcarpetcare.com/contact.html          301!
+/about_us              https://bearcarpetcare.com/                 301!
+/carpet-cleaning       https://bearcarpetcare.com/carpet-cleaning  301!
+/stain-removal         https://bearcarpetcare.com/carpet-cleaning  301!
+/pet-stain-removal     https://bearcarpetcare.com/carpet-cleaning  301!
+/area-rug-cleaning     https://bearcarpetcare.com/oriental-rug-cleaning 301!
+/oriental-rug-cleaning https://bearcarpetcare.com/oriental-rug-cleaning 301!
+/testimonials          https://bearcarpetcare.com/reviews          301!
+/gallery               https://bearcarpetcare.com/gallery          301!
+/contact               https://bearcarpetcare.com/contact          301!
 /*                     https://bearcarpetcare.com/:splat                301!
 ```
 

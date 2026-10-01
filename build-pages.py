@@ -14,7 +14,7 @@ import re
 
 ROOT = pathlib.Path(__file__).parent
 SITE = "https://bearcarpetcare.com"
-TODAY = "2026-07-31"
+TODAY = "2026-10-01"
 
 # ---------------------------------------------------------------- facts
 BIZ = {
@@ -106,24 +106,45 @@ REVIEWS = [
 
 SPRITE = (ROOT / "_sprite.html").read_text().strip()
 
+# Header photo for each inner page. Generated at 960 and 1600 wide.
+PAGE_PHOTO = {
+    "carpet-cleaning.html": "ph-carpet",
+    "upholstery-cleaning.html": "ph-upholstery",
+    "oriental-rug-cleaning.html": "ph-rug",
+    "reviews.html": "ph-reviews",
+    "gallery.html": "ph-gallery",
+    "contact.html": "ph-contact",
+}
+
 
 # ---------------------------------------------------------------- helpers
 def icon(name, cls="icon"):
     return f'<svg class="{cls}" aria-hidden="true"><use href="#i-{name}"></use></svg>'
 
 
+def photo_preload(name):
+    """Preload for a full-width photo served at 960 and 1600 wide."""
+    return [dict(href=f"img/{name}-1600.webp",
+                 srcset=f"img/{name}-960.webp 960w, img/{name}-1600.webp 1600w", sizes="100vw")]
+
+
 def head(page):
     """<head> for one page."""
-    pre = "".join(
-        f'\n    <link rel="preload" as="image" href="{src}"{(" media=" + chr(34) + m + chr(34)) if m else ""} fetchpriority="high">'
-        for src, m in page.get("preload", []))
+    pre = ""
+    for p in page.get("preload", []):
+        attrs = f' href="{p["href"]}"'
+        if p.get("srcset"):
+            attrs += f' imagesrcset="{p["srcset"]}" imagesizes="{p["sizes"]}"'
+        if p.get("media"):
+            attrs += f' media="{p["media"]}"'
+        pre += f'\n    <link rel="preload" as="image"{attrs} fetchpriority="high">'
     extra = "".join(f"\n{s}" for s in page.get("head_extra", []))
     return f"""<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>{page['title']}</title>
     <meta name="description" content="{page['desc']}">
     <link rel="canonical" href="{SITE}/{page['slug']}">
@@ -151,20 +172,28 @@ def head(page):
 
     <link rel="icon" href="img/favicon-32.png" sizes="32x32" type="image/png">
     <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
-    <link rel="preload" href="fonts/raleway-latin-var.woff2" as="font" type="font/woff2" crossorigin>{pre}
+    <link rel="preload" href="fonts/league-spartan-latin-var.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="fonts/questrial-latin.woff2" as="font" type="font/woff2" crossorigin>{pre}
     <link rel="stylesheet" href="css/site.min.css">
+    <script>(function(d){{d.classList.add("js");setTimeout(function(){{if(!window.bccReady)d.classList.remove("js")}},3000)}})(document.documentElement)</script>
 {page['schema']}{extra}
 </head>
 """
+
+
+def brand(sub):
+    return (f'<a href="index.html" class="brand"><img src="img/logo-220.webp" alt="" width="58" height="58">'
+            f'<span><b>{BIZ["name"]}</b><small>{sub}</small></span></a>')
 
 
 def header(active):
     items = []
     for label, href, sub in NAV:
         if sub:
-            links = "".join(f'<li><a href="{h}">{t}</a></li>' for t, h in sub)
-            open_now = active in [h for _, h in sub]
-            cur = ' aria-current="page"' if open_now else ""
+            links = "".join(
+                f'<li><a href="{h}"{" aria-current=" + chr(34) + "page" + chr(34) if h == active else ""}>{t}</a></li>'
+                for t, h in sub)
+            cur = ' aria-current="page"' if active in [h for _, h in sub] else ""
             items.append(
                 f'<li class="has-sub"><button class="subnav-toggle" aria-expanded="false"{cur}>{label}'
                 f'{icon("chev")}</button><ul class="subnav">{links}</ul></li>')
@@ -179,18 +208,16 @@ def header(active):
 
 <header class="site-header">
     <div class="wrap">
-        <a href="index.html" class="brand">
-            <img src="img/logo-220.webp" alt="" width="220" height="220" fetchpriority="high">
-            <span><b>{BIZ['name']}</b><span>{BIZ['city']}, {BIZ['region']}</span></span>
-        </a>
-        <button class="nav-toggle" aria-expanded="false" aria-controls="nav" aria-label="Menu"><span></span></button>
+        {brand(f"{BIZ['city']}, {BIZ['region']}")}
         <nav id="nav" class="nav" aria-label="Main">
             <ul>{''.join(items)}</ul>
             <div class="nav-cta">
-                <a href="{BIZ['phone_href']}" class="nav-phone">{icon('phone')}{BIZ['phone_display']}</a>
-                <a href="contact.html" class="btn btn-navy">Get a Quote</a>
+                <a href="{BIZ['phone_href']}" class="nav-phone"><span>{icon('phone')}</span>{BIZ['phone_display']}</a>
+                <a href="contact.html" class="btn btn-teal">Free Quote</a>
             </div>
         </nav>
+        <a href="{BIZ['phone_href']}" class="head-call" aria-label="Call {BIZ['phone_display']}">{icon('phone')}</a>
+        <button class="nav-toggle" aria-expanded="false" aria-controls="nav" aria-label="Menu"><span></span></button>
     </div>
 </header>
 
@@ -198,42 +225,34 @@ def header(active):
 """
 
 
-def footer():
+FOOTER_NAV = [("Home", "index.html"), ("Carpet", "carpet-cleaning.html"),
+              ("Upholstery", "upholstery-cleaning.html"), ("Rugs", "oriental-rug-cleaning.html"),
+              ("Pricing", "index.html#pricing"), ("Reviews", "reviews.html"),
+              ("Gallery", "gallery.html"), ("Contact", "contact.html")]
+
+
+def footer(active=""):
     socs = "".join(
         f'<a href="{url}" target="_blank" rel="noopener" aria-label="{BIZ["name"]} on {label}">{icon(k)}</a>'
         for k, label, url in SOCIALS)
-    hours = "".join(f"<div><dt>{d}</dt><dd>{t}</dd></div>" for d, t in HOURS)
+    links = "".join(
+        f'<a href="{h}"{" aria-current=" + chr(34) + "page" + chr(34) if h == active else ""}>{t}</a>'
+        for t, h in FOOTER_NAV)
     return f"""</main>
 
-<footer class="site-footer">
+<footer class="site-footer navy">
     <div class="wrap">
-        <div class="cols">
-            <div>
-                <p class="footer-brand">{BIZ['name']}</p>
-                <p>Family-owned carpet, upholstery and rug cleaning across Central Pennsylvania:
-                   {', '.join(AREAS[:-1])} and {AREAS[-1]}.</p>
-                <div class="socials">{socs}</div>
-            </div>
-            <div class="footer-contact">
-                <h2>Get in touch</h2>
-                <a href="{BIZ['phone_href']}">{icon('phone')}{BIZ['phone_display']}</a><br>
-                <a href="mailto:{BIZ['email']}">{icon('mail')}{BIZ['email']}</a>
-                <p class="footer-hours" style="margin-top:8px">{BIZ['city']}, {BIZ['region']} {BIZ['zip']}</p>
-            </div>
-            <div>
-                <h2>Services</h2>
-                <div class="footer-links">
-                    <a href="carpet-cleaning.html">{icon('chev')}Carpet Cleaning</a>
-                    <a href="upholstery-cleaning.html">{icon('chev')}Upholstery</a>
-                    <a href="oriental-rug-cleaning.html">{icon('chev')}Rug Cleaning</a>
-                    <a href="index.html#pricing">{icon('chev')}Pricing</a>
-                </div>
-            </div>
-            <div>
-                <h2>Hours (ET)</h2>
-                <dl class="hours">{hours}</dl>
-            </div>
+        {brand("Family-owned for " + BIZ["years"] + " years")}
+        <nav class="footer-nav" aria-label="Footer">{links}</nav>
+        <div class="footer-info">
+            <a href="{BIZ['phone_href']}">{icon('handset')}{BIZ['phone_display']}</a>
+            <a href="mailto:{BIZ['email']}">{icon('envelope')}{BIZ['email']}</a>
+            <span>{icon('time')}{BIZ['hours_text']}</span>
         </div>
+        <div class="footer-info">
+            <span>{icon('marker')}Serving {', '.join(AREAS[:-1])} and {AREAS[-1]}, PA</span>
+        </div>
+        <div class="socials">{socs}</div>
         <div class="footer-bottom">
             &copy; <span id="year">2026</span> <a href="index.html">{BIZ['name']}</a>. All rights reserved.
             Maintained by <a href="https://webeaze.io" rel="noopener">WebEaze</a>.
@@ -242,8 +261,8 @@ def footer():
 </footer>
 
 <div class="callbar">
-    <a href="{BIZ['phone_href']}" class="btn btn-call">{icon('phone')}Call {BIZ['phone_display']}</a>
-    <a href="contact.html" class="btn btn-navy">Free Quote</a>
+    <a href="{BIZ['phone_href']}" class="btn btn-call">{icon('phone')}Call Now</a>
+    <a href="contact.html" class="btn btn-teal">Free Quote</a>
 </div>
 
 <a href="#" class="to-top" aria-label="Back to top">{icon('up')}</a>
@@ -256,12 +275,22 @@ def footer():
 """
 
 
-def page_head_block(title, crumbs, css_class):
+def section_head(eyebrow, title, sub=None, level="h2"):
+    p = f"<p>{sub}</p>" if sub else ""
+    return (f'<div class="section-head" data-reveal><span class="eyebrow">{eyebrow}</span>'
+            f'<{level}>{title}</{level}>{p}</div>')
+
+
+def page_head_block(eyebrow, title, crumbs, slug):
     trail = "".join(
         (f'<li><a href="{h}">{t}</a></li>' if h else f'<li aria-current="page">{t}</li>')
         for t, h in crumbs)
-    return f"""    <div class="page-head {css_class}">
+    ph = PAGE_PHOTO[slug]
+    return f"""    <div class="page-head">
+        <img src="img/{ph}-1600.webp" srcset="img/{ph}-960.webp 960w, img/{ph}-1600.webp 1600w" sizes="100vw"
+             alt="" width="1600" height="667" fetchpriority="high">
         <div class="wrap">
+            <span class="eyebrow">{eyebrow}</span>
             <h1>{title}</h1>
             <nav aria-label="Breadcrumb"><ol class="crumbs">{trail}</ol></nav>
         </div>
@@ -271,20 +300,19 @@ def page_head_block(title, crumbs, css_class):
 
 def pricing_block():
     cards = []
-    for p in PRICES:
+    for i, p in enumerate(PRICES):
         tag = '<span class="tag">Most booked</span>' if p["feature"] else ""
-        amount = (f'<p class="amount">${p["amount"]}<small> {p["unit"]}</small></p>'
+        amount = (f'<p class="amount">${p["amount"]}</p><p class="unit">{p["unit"]}</p>'
                   if p.get("currency", True)
-                  else f'<p class="amount">{p["amount"]}{p["unit"]}</p>')
+                  else f'<p class="amount">{p["amount"]}{p["unit"]}</p><p class="unit">with free pick-up</p>')
         notes = "".join(f"<li>{n}</li>" for n in p["notes"])
-        cards.append(f'<div class="price{" feature" if p["feature"] else ""}">{tag}'
-                     f'<h3>{p["name"]}</h3>{amount}<ul>{notes}</ul></div>')
-    return f"""    <section class="tint" id="pricing">
-        <div class="wrap section">
-            <div class="section-head centre">
-                <h2 class="rule">Straightforward pricing</h2>
-                <p>What most jobs cost. Call for an exact figure on yours.</p>
-            </div>
+        btn = "btn-teal" if p["feature"] else "btn-line"
+        cards.append(f'<div class="price" data-reveal="{i + 1}">{tag}'
+                     f'<h3>{p["name"]}</h3>{amount}<ul>{notes}</ul>'
+                     f'<a href="contact.html" class="btn {btn}">Book Now</a></div>')
+    return f"""    <section class="cream section" id="pricing">
+        <div class="wrap">
+            {section_head("special offers", "Straightforward Pricing", "What most jobs cost. Call for an exact figure on yours.")}
             <div class="prices">{''.join(cards)}</div>
             <p class="price-note">Prices are starting points for standard cleaning and cover the room sizes shown.
                Heavily soiled carpet, stairs, hallways and rug repairs are quoted separately, and we will always
@@ -294,48 +322,126 @@ def pricing_block():
 """
 
 
-def reviews_block(short_only=False, scroller=True):
-    items = [r for r in REVIEWS if r[2]] if short_only else REVIEWS
-    cards = "".join(
-        f'<figure class="review"><div class="stars" aria-hidden="true">★★★★★</div>'
-        f'<span class="visually-hidden">Rated 5 out of 5</span>'
-        f'<blockquote>“{t}”</blockquote>'
+def review_cards():
+    return "".join(
+        f'<figure class="review" data-reveal="{i % 3 + 1}">{icon("quote")}'
+        f'<blockquote>{t}</blockquote>'
+        f'<div class="stars" aria-hidden="true">★★★★★</div><span class="visually-hidden">Rated 5 out of 5</span>'
         f'<figcaption>{n}<time datetime="{d}">{d}</time></figcaption></figure>'
-        for n, d, _, t in items)
-    cls = "review-scroller" if scroller else "reviews"
-    hint = '<span class="hint">Swipe for more →</span>' if scroller else ""
-    return f'<div class="{cls}">{cards}</div>{hint}'
+        for i, (n, d, _, t) in enumerate(REVIEWS))
+
+
+def testimonial_slides():
+    return "".join(
+        f'<figure class="slide"><blockquote>{t}</blockquote>'
+        f'<div class="stars" aria-hidden="true">★★★★★</div><span class="visually-hidden">Rated 5 out of 5</span>'
+        f'<figcaption>{n}<time datetime="{d}">Google review</time></figcaption></figure>'
+        for n, d, short, t in REVIEWS if short)
 
 
 def cta(title, sub):
-    return f"""    <section class="cta">
-        <div class="wrap">
+    return f"""    <section class="navy section on-dark cta-band">
+        <div class="wrap" data-reveal>
+            <span class="eyebrow">free quotes</span>
             <h2>{title}</h2>
             <p>{sub}</p>
-            <div class="btn-row">
-                <a href="{BIZ['phone_href']}" class="btn btn-call btn-lg">{icon('phone')}Call {BIZ['phone_display']}</a>
-                <a href="contact.html" class="btn btn-light btn-lg">Get a Free Quote</a>
+            <div class="btn-row stack">
+                <a href="contact.html" class="btn btn-teal">Get a Free Quote</a>
+                <a href="{BIZ['phone_href']}" class="btn btn-white">{icon('phone')}Call {BIZ['phone_display']}</a>
             </div>
         </div>
     </section>
 """
 
 
+def faq_items(qs, open_first=False):
+    return "".join(
+        f"<details{' open' if open_first and i == 0 else ''}><summary><h3>{q}</h3></summary>"
+        f"<div class=\"answer\"><p>{a}</p></div></details>"
+        for i, (q, a) in enumerate(qs))
+
+
 def faq_block(qs):
-    items = "".join(
-        f"<details><summary><h3>{q}</h3></summary><div class=\"answer\"><p>{a}</p></div></details>"
-        for q, a in qs)
-    return f"""    <section class="tint">
-        <div class="wrap section">
-            <div class="section-head centre"><h2>Frequently asked questions</h2></div>
-            <div class="faq">{items}</div>
+    return f"""    <section class="cream section">
+        <div class="wrap narrow">
+            {section_head("good to know", "Frequently Asked Questions")}
+            <div class="faq" data-reveal>{faq_items(qs, open_first=True)}</div>
         </div>
     </section>
 """
 
 
+def contact_details():
+    return f"""<ul class="contact-details">
+                    <li>{icon('marker')}Based in {BIZ['city']}, {BIZ['region']} {BIZ['zip']}</li>
+                    <li><a href="{BIZ['phone_href']}">{icon('handset')}<span class="big">{BIZ['phone_display']}</span></a></li>
+                    <li><a href="mailto:{BIZ['email']}">{icon('envelope')}{BIZ['email']}</a></li>
+                    <li>{icon('time')}{BIZ['hours_text']}</li>
+                </ul>"""
+
+
+FORM_ACTION = "https://gmgzhjxfypuyzzgqwona.supabase.co/functions/v1/form-lead/65995a53-f1e8-4ff1-a0d4-3b15b126d1ca"
+
+
+def contact_block(details=True):
+    """Contact copy and the quote form. Used on the home and contact pages."""
+    return f"""    <section class="cream section" id="quote">
+        <div class="wrap split top">
+            <div class="split-copy" data-reveal>
+                <span class="eyebrow">contact us</span>
+                <h2>Have Questions? Get in Touch!</h2>
+                <p class="muted">Free, no-obligation quotes across Harrisburg and Central PA.
+                   Tell us what needs cleaning and we usually reply the same business day.</p>
+                {contact_details() if details else ""}
+            </div>
+            <div data-reveal="2">
+                <div id="form-status" aria-live="polite"></div>
+                <form id="quote-form" class="form" novalidate method="POST" action="{FORM_ACTION}">
+                    <div class="field">
+                        <label for="name">{icon('user')}Your name</label>
+                        <input type="text" id="name" name="name" autocomplete="name" required data-msg="Please enter your name">
+                        <span class="err" id="name-err"></span>
+                    </div>
+                    <div class="field">
+                        <label for="email">{icon('envelope')}Email address</label>
+                        <input type="email" id="email" name="email" autocomplete="email" required data-msg="Please enter your email">
+                        <span class="err" id="email-err"></span>
+                    </div>
+                    <div class="field full">
+                        <label for="phone">{icon('handset')}Phone <span class="muted">(optional)</span></label>
+                        <input type="tel" id="phone" name="phone" autocomplete="tel">
+                        <span class="err"></span>
+                    </div>
+                    <div class="field full">
+                        <label for="message">{icon('pencil')}What needs cleaning?</label>
+                        <textarea id="message" name="message" required data-msg="Please tell us what needs cleaning"></textarea>
+                        <span class="err" id="message-err"></span>
+                    </div>
+                    <div class="form-foot full">
+                        <button type="submit" class="btn btn-teal">Get In Touch</button>
+                        <p>Or call <a href="{BIZ['phone_href']}">{BIZ['phone_display']}</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+"""
+
+
+def clean_urls(out):
+    """Extensionless URLs, which Cloudflare Pages serves natively (it 308s
+    /page.html to /page) and GitHub Pages also resolves. Canonicals, schema
+    and links all point at the final address so nothing goes via a redirect."""
+    out = re.sub(rf'{re.escape(SITE)}/index\.html', f'{SITE}/', out)
+    out = re.sub(rf'{re.escape(SITE)}/([a-z0-9-]+)\.html', rf'{SITE}/\1', out)
+    out = re.sub(r'href="/?index\.html', 'href="/', out)
+    out = re.sub(r'href="/?([a-z0-9-]+)\.html', r'href="/\1', out)
+    return out
+
+
 def write(slug, page, body, scripts=""):
-    out = head(page) + header(page.get("active", slug)) + body + footer().replace("{scripts}", scripts)
+    active = page.get("active", slug)
+    out = clean_urls(head(page) + header(active) + body + footer(active).replace("{scripts}", scripts))
     (ROOT / slug).write_text(out)
     text = re.sub(r"<[^>]+>", " ", re.search(r"<main.*?</main>", out, re.S).group(0))
     return len(text.split())
@@ -443,6 +549,8 @@ def service_ld(slug, name, stype, desc, offers=None):
 SERVICES = {
 "carpet-cleaning.html": dict(
   nav="Carpet Cleaning",
+  eyebrow="wall-to-wall, stairs &amp; pet stains",
+  h2="Deep Cleaning for Every Room",
   h1="Carpet Cleaning in Harrisburg, PA",
   title="Carpet Cleaning in Harrisburg, PA | Bear Carpet Care",
   desc="Carpet cleaning in Harrisburg, PA from $79.95 for two rooms. Hot-water extraction, stain and pet-odour removal, Scotchgard. Call (717) 454-7347.",
@@ -475,6 +583,8 @@ SERVICES = {
 
 "upholstery-cleaning.html": dict(
   nav="Upholstery Cleaning",
+  eyebrow="sofas, chairs &amp; sectionals",
+  h2="Furniture That Feels New Again",
   h1="Upholstery Cleaning in Harrisburg, PA",
   title="Upholstery Cleaning in Harrisburg, PA | Bear Carpet Care",
   desc="Upholstery cleaning in Harrisburg, PA. Sofas $79.95, love seats $59.95, chairs $39.95. Non-toxic and pet-safe. Call (717) 454-7347.",
@@ -507,6 +617,8 @@ SERVICES = {
 
 "oriental-rug-cleaning.html": dict(
   nav="Rug Cleaning",
+  eyebrow="free pick-up &amp; delivery",
+  h2="Rugs Cleaned, Repaired &amp; Restored",
   h1="Oriental &amp; Area Rug Cleaning in Harrisburg, PA",
   title="Oriental &amp; Area Rug Cleaning in Harrisburg, PA | Bear Carpet Care",
   desc="Oriental and area rug cleaning in Harrisburg, PA. 15% off with free pick-up and delivery. Repairs in-house. Call (717) 454-7347.",
@@ -541,44 +653,56 @@ SERVICES = {
 
 
 def service_page(slug, s):
-    inc = "".join(f"<li>{i}</li>" for i in s["included"])
+    inc = "".join(f"<li>{icon('check')}<span>{i}</span></li>" for i in s["included"])
     steps = "".join(f"<li><h3>{t}</h3><p>{d}</p></li>" for t, d in s["steps"])
-    notes = "".join(f'<div class="note">{icon(i)}<h3>{t}</h3><p>{d}</p></div>' for i, t, d in s["notes"])
+    notes = "".join(
+        f'<div class="note" data-reveal="{n + 1}">{icon("l-" + i)}<h3>{t}</h3><p>{d}</p></div>'
+        for n, (i, t, d) in enumerate(s["notes"]))
     src, w, h, cap, alt = s["band"]
     trail = [("Home", "index.html"), (s["nav"], None)]
 
-    body = page_head_block(s["h1"], trail, s["head_class"]) + f"""
-    <section class="wrap section">
-        <div class="split split-wide">
-            <p class="lead">{s['lead']}</p>
-            <div class="btn-row">
-                <a href="{BIZ['phone_href']}" class="btn btn-call btn-lg">{icon('phone')}Call {BIZ['phone_display']}</a>
+    body = page_head_block(s["eyebrow"], s["h1"], trail, slug) + f"""
+    <section class="section">
+        <div class="wrap split">
+            <div class="split-copy" data-reveal>
+                <span class="eyebrow">what's included</span>
+                <h2>{s['h2']}</h2>
+                <p class="lead">{s['lead']}</p>
+                <ul class="checklist two">{inc}</ul>
+                <div class="btn-row stack">
+                    <a href="contact.html" class="btn btn-teal">Get a Free Quote</a>
+                    <a href="{BIZ['phone_href']}" class="btn btn-line">{icon('phone')}{BIZ['phone_display']}</a>
+                </div>
             </div>
+            <figure class="feature-img" data-reveal="2">
+                <img src="img/{src}-{w}.webp" srcset="img/{src}-{w // 2}.webp {w // 2}w, img/{src}-{w}.webp {w}w"
+                     sizes="(min-width: 900px) 50vw, 100vw" alt="{alt}"
+                     width="{w}" height="{h}" loading="lazy" decoding="async">
+            </figure>
         </div>
+    </section>
 
-        <div class="split" style="margin-top:var(--section-y)">
-            <div>
-                <h2 class="rule">What's included</h2>
-                <ul class="checklist">{inc}</ul>
+    <section class="cream section">
+        <div class="wrap split top">
+            <div class="split-copy" data-reveal>
+                <span class="eyebrow">how it works</span>
+                <h2>Four Steps, Start to Finish</h2>
+                <p class="muted">{cap}. Every job follows the same process, so you know what to expect
+                   before we arrive.</p>
             </div>
-            <div>
-                <h2 class="rule">How it works</h2>
-                <ol class="steps">{steps}</ol>
-            </div>
+            <ol class="steps" data-reveal="2">{steps}</ol>
         </div>
+    </section>
 
-        <figure class="band">
-            <img src="img/{src}-{w}.webp" srcset="img/{src}-{w // 2}.webp {w // 2}w, img/{src}-{w}.webp {w}w"
-                 sizes="(min-width: 992px) 1080px, 100vw" alt="{alt}"
-                 width="{w}" height="{h}" loading="lazy" decoding="async">
-            <figcaption>{cap}</figcaption>
-        </figure>
-
-        <div class="cols">{notes}</div>
+    <section class="section">
+        <div class="wrap">
+            {section_head("why choose us", "The Bear Carpet Care Difference")}
+            <div class="notes">{notes}</div>
+        </div>
     </section>
 """ + faq_block(s["faqs"]) + cta(*s["cta"])
 
-    page = dict(slug=slug, title=s["title"], desc=s["desc"], preload=s["preload"],
+    page = dict(slug=slug, title=s["title"], desc=s["desc"], preload=photo_preload(PAGE_PHOTO[slug]),
                 schema=ld(business(), website(),
                           service_ld(slug, s["nav"], s["stype"], s["sdesc"], s.get("offers")),
                           crumbs_ld(slug, trail),
@@ -590,25 +714,33 @@ def service_page(slug, s):
 # ---------------------------------------------------------------- home
 def home():
     slug = "index.html"
-    cards = [
-        ("carpet-cleaning.html", "carpet-cleaning-3", 640, 432, "Carpet Cleaning",
-         "Hot-water extraction, stain and pet-odour removal, Scotchgard.", "from $79.95",
-         "Bear Carpet Care cleaning a living room carpet"),
-        ("upholstery-cleaning.html", "svc-upholstery", 640, 304, "Upholstery Cleaning",
-         "Sofas, sectionals, chairs and recliners, cleaned and protected.", "from $39.95",
-         "A clean upholstered sofa in a Harrisburg living room"),
-        ("oriental-rug-cleaning.html", "oriental-rug-cleaning-3", 512, 465, "Rug Cleaning",
-         "Cleaned, repaired and restored. Free pick-up and delivery.", "15% off",
-         "An oriental rug being cleaned by hand"),
+    services = [
+        ("carpet-cleaning.html", "l-wand", "Carpet Cleaning", "Two rooms from $79.95"),
+        ("upholstery-cleaning.html", "l-sofa", "Upholstery Cleaning", "Sofas, chairs &amp; sectionals"),
+        ("oriental-rug-cleaning.html", "l-rug", "Oriental Rug Cleaning", "Free pick-up &amp; delivery"),
+        ("carpet-cleaning.html", "l-paw", "Pet Stain &amp; Odor Removal", "Treated at the source"),
     ]
     svc = "".join(
-        f'<article class="card"><img src="img/{im}-{w}.webp" '
-        f'srcset="img/{im}-{w}.webp {w}w, img/{im}-{w * 2}.webp {w * 2}w" '
-        f'sizes="(min-width: 900px) 33vw, 40vw" alt="{alt}" width="{w}" height="{h}" '
-        f'loading="lazy" decoding="async">'
-        f'<div class="card-body"><h3>{t}</h3><p>{d}</p>'
-        f'<a href="{href}" class="btn btn-outline">{price}{icon("chev")}</a></div></article>'
-        for href, im, w, h, t, d, price, alt in cards)
+        f'<div class="service" data-reveal="{i + 1}">{icon(ic)}<h3><a href="{href}">{t}</a></h3>'
+        f'<p>{d}</p><span class="arrow-link">{icon("arrow")}</span></div>'
+        for i, (href, ic, t, d) in enumerate(services))
+
+    work = [
+        ("g-carpet", "Carpet Cleaning", "Hot-water extraction that lifts the dirt and the residue with it."),
+        ("g-sofa", "Upholstery Cleaning", "Fabric-tested steam cleaning for sofas, chairs and sectionals."),
+        ("g-rugfringe", "Rug Cleaning", "Oriental and area rugs washed by hand at our own facility."),
+    ]
+    circles = "".join(
+        f'<div class="circle-item" data-reveal="{i + 1}">'
+        f'<img src="img/{im}-380.webp" srcset="img/{im}-380.webp 380w, img/{im}-760.webp 760w" sizes="200px" '
+        f'alt="" width="200" height="200" loading="lazy" decoding="async">'
+        f'<small>Our work</small><h3><a href="gallery.html">{t}</a></h3><p>{d}</p>'
+        f'<span class="arrow-link">{icon("arrow")}</span></div>'
+        for i, (im, t, d) in enumerate(work))
+
+    socials = "".join(
+        f'<li><a href="{url}" target="_blank" rel="noopener">{icon(k)}{label}</a></li>'
+        for k, label, url in SOCIALS)
 
     faqs = [
         ("What does carpet cleaning cost?", "Two rooms up to 250 sq ft is $79.95 and four rooms up to 500 sq ft is $149.95. Sofas are $79.95, love seats $59.95 and chairs $39.95. Oriental rugs are 15% off with free pick-up and delivery."),
@@ -620,86 +752,145 @@ def home():
     ]
 
     body = f"""    <section class="hero">
+        <picture>
+            <source media="(max-width: 639px)" srcset="img/hero-m-720.webp">
+            <img src="img/hero-1600.webp" srcset="img/hero-960.webp 960w, img/hero-1600.webp 1360w" sizes="100vw"
+                 alt="A carpet being deep cleaned with a hot-water extraction wand" width="1360" height="765" fetchpriority="high">
+        </picture>
         <div class="wrap">
-            <div class="hero-inner">
-                <h1>Carpets, furniture and rugs, deep cleaned</h1>
-                <p>Family-owned in Harrisburg for {BIZ['years']} years. Non-toxic, pet-safe, and two rooms from $79.95.</p>
-                <div class="btn-row">
-                    <a href="{BIZ['phone_href']}" class="btn btn-call btn-lg">{icon('phone')}Call {BIZ['phone_display']}</a>
-                    <a href="contact.html" class="btn btn-ghost btn-lg">Get a Free Quote</a>
-                </div>
-                <ul class="ticks">
-                    <li>{BIZ['years']} years</li>
-                    <li>Pet &amp; kid safe</li>
-                    <li>Free quotes</li>
-                </ul>
+            <span class="eyebrow">carpet cleaning in Harrisburg, PA</span>
+            <h1>Enjoy Your Freshly Cleaned Home</h1>
+            <p>Carpets, furniture and rugs, deep cleaned by a family business with {BIZ['years']} years in Central PA.
+               Non-toxic, pet-safe, and two rooms from $79.95.</p>
+            <div class="btn-row stack">
+                <a href="contact.html" class="btn btn-teal">Get a Free Quote</a>
+                <a href="{BIZ['phone_href']}" class="btn btn-white">{icon('phone')}Call {BIZ['phone_display']}</a>
             </div>
+            <ul class="ticks">
+                <li>{icon('check')}{BIZ['years']} years, family-owned</li>
+                <li>{icon('check')}Pet &amp; kid safe</li>
+                <li>{icon('check')}Free quotes</li>
+            </ul>
         </div>
     </section>
 
-    <section class="wrap section">
-        <div class="section-head centre">
-            <h2 class="rule">What we clean</h2>
+    <section class="cream section">
+        <div class="wrap">
+            {section_head("what we do", "Our Services")}
+            <div class="services">{svc}</div>
         </div>
-        <div class="cols">{svc}</div>
+    </section>
+
+    <section class="section">
+        <div class="wrap split">
+            <div class="split-copy" data-reveal>
+                <span class="eyebrow">good to know</span>
+                <h2>Keeping Central PA Homes Fresh and Clean</h2>
+                <div class="faq">{faq_items(faqs, open_first=True)}</div>
+            </div>
+            <div class="stat-photo" data-reveal="2">
+                <img src="img/pet-1100.webp" srcset="img/pet-640.webp 640w, img/pet-1100.webp 698w"
+                     sizes="(min-width: 900px) 45vw, 100vw" alt="A small dog relaxing on a freshly cleaned carpet"
+                     width="698" height="559" loading="lazy" decoding="async">
+                <div class="stats">
+                    <div class="stat"><b>Years</b><strong><span data-count="30">30</span>+</strong>Family-owned and locally run.</div>
+                    <div class="stat"><b>Towns</b><strong>{len(AREAS)}</strong>Harrisburg to Lancaster and York.</div>
+                </div>
+            </div>
+        </div>
     </section>
 
 {pricing_block()}
-    <section class="wrap section">
-        <div class="split split-wide">
-            <div>
-                <h2 class="rule">{BIZ['years']} years, still family-run</h2>
-                <p>Bear Carpet Care is family-owned and locally operated in Harrisburg. Dave and the team
-                   have been cleaning carpet, upholstery and rugs across Central PA for more than three decades,
-                   using non-toxic products that are safe around pets and children.</p>
+    <section class="testimonials">
+        <div class="navy t-panel on-dark" data-reveal>
+            <span class="eyebrow">testimonials</span>
+            <h2>What They Say</h2>
+            {icon('quote', 'icon quote-mark')}
+            <div class="slider" tabindex="0" role="region" aria-label="Customer reviews">{testimonial_slides()}</div>
+            <div class="dots" role="group" aria-label="Choose a review"></div>
+            <a class="more" href="reviews.html">Read all reviews</a>
+        </div>
+        <img src="img/spot-1000.webp" srcset="img/spot-560.webp 560w, img/spot-1000.webp 881w"
+             sizes="(min-width: 900px) 50vw, 100vw" alt="Spot-treating a stain on a cream carpet"
+             width="881" height="1102" loading="lazy" decoding="async">
+    </section>
+
+    <section class="social-strip" aria-label="Find us online">
+        <div class="wrap"><ul>{socials}</ul></div>
+    </section>
+
+    <section class="section">
+        <div class="wrap split">
+            <div class="photo-card" data-reveal>
+                <img src="img/facility-900.webp" srcset="img/facility-560.webp 560w, img/facility-900.webp 765w"
+                     sizes="(min-width: 900px) 45vw, 100vw" alt="Oriental rugs hanging to dry at the Bear Carpet Care facility"
+                     width="765" height="957" loading="lazy" decoding="async">
+                <div class="tag-box">Free Rug Pick-Up &amp; Delivery<small>Rugs are washed at our own facility, then brought back to your door.</small></div>
             </div>
-            <p class="big-stat"><span data-count="30">30</span>+<small>years in Harrisburg</small></p>
+            <div class="split-copy" data-reveal="2">
+                <span class="eyebrow">save your time</span>
+                <h2>We Make Clean Carpets Easy</h2>
+                <p class="muted">Bear Carpet Care is family-owned and locally operated in Harrisburg. Dave and the team
+                   have been cleaning carpet, upholstery and rugs across Central PA for more than three decades.</p>
+                <ol class="numbered">
+                    <li><span>01.</span><div>Non-Toxic &amp; Pet-Safe<small>Biodegradable, hypoallergenic solutions on every job.</small></div></li>
+                    <li><span>02.</span><div>Honest, Upfront Pricing<small>We confirm the total before we start. No surprises.</small></div></li>
+                    <li><span>03.</span><div>Quick Replies<small>Most quotes answered the same business day.</small></div></li>
+                </ol>
+                <div class="btn-row"><a href="contact.html" class="btn btn-teal">Get a Free Quote</a></div>
+            </div>
         </div>
     </section>
 
-    <section class="tint">
-        <div class="wrap section">
-            <div class="section-head centre">
-                <h2 class="rule">What our customers say</h2>
-                <p><a href="reviews.html">Read all reviews</a></p>
-            </div>
-            {reviews_block(short_only=True)}
+    <section class="cream section">
+        <div class="wrap">
+            {section_head("find help now", "Recent Work", "A few jobs from around Harrisburg and Central PA. There is more in the gallery.")}
+            <div class="circles">{circles}</div>
         </div>
     </section>
 
-{faq_block(faqs)}{cta('Need a quote or have a question?', 'Free, no-obligation quotes across Harrisburg and Central Pennsylvania.')}"""
+    <section class="band">
+        <img src="img/band-1440.webp" srcset="img/band-960.webp 960w, img/band-1440.webp 1440w" sizes="100vw"
+             alt="" width="1440" height="617" loading="lazy" decoding="async">
+        <a href="https://www.youtube.com/@BearCarpetCare" target="_blank" rel="noopener" data-reveal>
+            <span class="play">{icon('play')}</span>
+            <p>Watch us work on YouTube</p>
+        </a>
+    </section>
+
+{contact_block(details=False)}"""
 
     page = dict(slug=slug, title=f"Carpet Cleaning in Harrisburg, PA from $79.95 | {BIZ['name']}",
                 desc="Family-owned carpet, upholstery and oriental rug cleaning in Harrisburg, PA. Two rooms from $79.95. 30+ years, non-toxic and pet-safe. Call (717) 454-7347.",
-                preload=[("img/brighthero-720.webp", "(max-width: 767px)"),
-                         ("img/brighthero-960.webp", "(min-width: 768px) and (max-width: 1199px)"),
-                         ("img/brighthero-1440.webp", "(min-width: 1200px)")],
+                preload=[dict(href="img/hero-m-720.webp", media="(max-width: 639px)"),
+                         dict(href="img/hero-1600.webp", media="(min-width: 640px)",
+                              srcset="img/hero-960.webp 960w, img/hero-1600.webp 1360w", sizes="100vw")],
                 schema=ld(business(), website(),
                           webpage(slug, "Carpet Cleaning in Harrisburg, PA", ("WebPage", "FAQPage"), faqs)))
-    return write(slug, page, body)
-
-
+    return write(slug, page, body, scripts='<script src="js/contact.min.js" defer></script>\n')
 
 
 # ---------------------------------------------------------------- reviews
 def reviews_page():
     slug = "reviews.html"
     trail = [("Home", "index.html"), ("Reviews", None)]
-    body = page_head_block("Customer Reviews", trail, "head-contact") + f"""
-    <section class="wrap section">
-        <p class="lead">What people in Harrisburg and Central PA say after we have been out.
-           These are collected from our Google listing.</p>
-        <div style="margin-top:var(--section-y)">{reviews_block(scroller=False)}</div>
-        <p class="price-note" style="margin-top:24px">
-            Reviews are reproduced from our
-            <a href="https://maps.app.goo.gl/8CSvEHzdW2A2sdau7" target="_blank" rel="noopener">Google Business Profile</a>
-            and <a href="https://www.yelp.com/biz/bear-carpet-care-harrisburg" target="_blank" rel="noopener">Yelp page</a>,
-            where you can read them in full.</p>
+    body = page_head_block("testimonials", "Customer Reviews", trail, slug) + f"""
+    <section class="cream section">
+        <div class="wrap">
+            {section_head("what they say", "Straight From Our Customers", "What people in Harrisburg and Central PA say after we have been out. These are collected from our Google listing.")}
+            <div class="reviews">{review_cards()}</div>
+            <p class="price-note">
+                Reviews are reproduced from our
+                <a href="https://maps.app.goo.gl/8CSvEHzdW2A2sdau7" target="_blank" rel="noopener">Google Business Profile</a>
+                and <a href="https://www.yelp.com/biz/bear-carpet-care-harrisburg" target="_blank" rel="noopener">Yelp page</a>,
+                where you can read them in full.</p>
+        </div>
     </section>
 
-{cta('Join them?', 'Free quotes across Harrisburg and Central Pennsylvania.')}"""
+{cta('Join Them?', 'Free quotes across Harrisburg and Central Pennsylvania.')}"""
     page = dict(slug=slug, title=f"Customer Reviews | {BIZ['name']}, Harrisburg PA",
                 desc="Read reviews from Bear Carpet Care customers across Harrisburg and Central PA. Carpet, upholstery and rug cleaning, family-owned for over 30 years.",
+                preload=photo_preload(PAGE_PHOTO[slug]),
                 schema=ld(business(), website(), crumbs_ld(slug, trail),
                           webpage(slug, "Customer Reviews", ("CollectionPage",))))
     return write(slug, page, body)
@@ -712,7 +903,9 @@ GALLERY = [
     ("g-rugfringe", "Oriental rug fringe cleaned by hand"),
     ("g-facility", "Rugs drying at our cleaning facility"),
     ("g-pet", "Carpet after pet odour treatment"),
+    ("rug-facility", "Oriental rugs hung to dry after washing"),
 ]
+GALLERY_SRC = {"rug-facility": (640, 1280)}
 # Wider than the grid tiles, so it runs full width underneath them.
 GALLERY_WIDE = ("before-and-after", 500, 181, "An oriental rug before and after cleaning")
 
@@ -722,31 +915,31 @@ def gallery():
     trail = [("Home", "index.html"), ("Gallery", None)]
     figs = []
     for i, (name, cap) in enumerate(GALLERY):
-        # First tile is above the fold, so it is the LCP element and must not
-        # be lazy-loaded.
-        load = 'fetchpriority="high" decoding="async"' if i == 0 else 'loading="lazy" decoding="async"'
+        a, b = GALLERY_SRC.get(name, (380, 760))
         figs.append(
-            f'<figure><img src="img/{name}-380.webp" '
-            f'srcset="img/{name}-380.webp 380w, img/{name}-760.webp 760w" '
-            f'sizes="(min-width: 900px) 33vw, 50vw" alt="{cap}" '
-            f'width="380" height="285" {load}><figcaption>{cap}</figcaption></figure>')
+            f'<figure data-reveal="{i % 3 + 1}"><img src="img/{name}-{a}.webp" '
+            f'srcset="img/{name}-{a}.webp {a}w, img/{name}-{b}.webp {b}w" '
+            f'sizes="(min-width: 900px) 33vw, (min-width: 560px) 50vw, 100vw" alt="{cap}" '
+            f'width="380" height="285" loading="lazy" decoding="async"><figcaption>{cap}</figcaption></figure>')
     wn, ww, wh, wcap = GALLERY_WIDE
-    wide = (f'<figure class="wide"><img src="img/{wn}.webp" alt="{wcap}" '
+    wide = (f'<figure class="wide" data-reveal><img src="img/{wn}.webp" alt="{wcap}" '
             f'width="{ww}" height="{wh}" loading="lazy" decoding="async">'
             f'<figcaption>{wcap}</figcaption></figure>')
-    body = page_head_block("Our Work", trail, "head-carpet") + f"""
-    <section class="wrap section">
-        <p class="lead">Carpet, upholstery and rug work from around Harrisburg and Central PA.</p>
-        <div class="gallery" style="margin-top:var(--section-y)">{''.join(figs)}{wide}</div>
-        <p class="price-note" style="margin-top:24px">More on
-            <a href="https://www.instagram.com/bearcarpetcare/" target="_blank" rel="noopener">Instagram</a>,
-            <a href="https://www.tiktok.com/@bearcarpetcare" target="_blank" rel="noopener">TikTok</a> and
-            <a href="https://www.youtube.com/@BearCarpetCare" target="_blank" rel="noopener">YouTube</a>.</p>
+    body = page_head_block("before &amp; after", "Our Work", trail, slug) + f"""
+    <section class="section">
+        <div class="wrap">
+            {section_head("recent jobs", "Carpet, Upholstery &amp; Rugs", "Work from around Harrisburg and Central PA.")}
+            <div class="gallery">{''.join(figs)}{wide}</div>
+            <p class="price-note">More on
+                <a href="https://www.instagram.com/bearcarpetcare/" target="_blank" rel="noopener">Instagram</a>,
+                <a href="https://www.tiktok.com/@bearcarpetcare" target="_blank" rel="noopener">TikTok</a> and
+                <a href="https://www.youtube.com/@BearCarpetCare" target="_blank" rel="noopener">YouTube</a>.</p>
+        </div>
     </section>
 
-{cta('Want yours looking like this?', 'Free quotes across Harrisburg and Central Pennsylvania.')}"""
+{cta('Want Yours Looking Like This?', 'Free quotes across Harrisburg and Central Pennsylvania.')}"""
     page = dict(slug=slug, title=f"Gallery | {BIZ['name']}, Harrisburg PA",
-                preload=[("img/g-carpet-380.webp", None)],
+                preload=photo_preload(PAGE_PHOTO[slug]),
                 desc="Photos of carpet, upholstery and oriental rug cleaning by Bear Carpet Care in Harrisburg, PA and Central Pennsylvania.",
                 schema=ld(business(), website(), crumbs_ld(slug, trail),
                           webpage(slug, "Our Work", ("CollectionPage",))))
@@ -760,59 +953,27 @@ def contact():
     MAP = ("https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d495471.83057429155!2d-77.10622490514357"
            "!3d40.274299078759906!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c9c132db7bfb3f"
            "%3A0x3fc7795a8d802f20!2sHarrisburg%2C%20PA!5e0!3m2!1sen!2sus!4v1716574863725!5m2!1sen!2sus")
-    body = page_head_block("Contact Bear Carpet Care", trail, "head-contact") + f"""
-    <section class="wrap section">
-        <p class="lead">Call <strong><a href="{BIZ['phone_href']}">{BIZ['phone_display']}</a></strong>
-           or email <a href="mailto:{BIZ['email']}">{BIZ['email']}</a> for a free quote.
-           We serve Harrisburg and Central PA and usually reply the same business day.</p>
-
-        <div class="split" style="margin-top:var(--section-y)">
-            <div>
-                <h2 class="rule">Send us a message</h2>
-                <div id="form-status" aria-live="polite"></div>
-                <form id="quote-form" novalidate method="POST" action="https://gmgzhjxfypuyzzgqwona.supabase.co/functions/v1/form-lead/65995a53-f1e8-4ff1-a0d4-3b15b126d1ca">
-                    <div class="field">
-                        <label for="name">Your name</label>
-                        <input type="text" id="name" name="name" autocomplete="name" required data-msg="Please enter your name">
-                        <span class="err" id="name-err"></span>
-                    </div>
-                    <div class="field">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" autocomplete="email" required data-msg="Please enter your email">
-                        <span class="err" id="email-err"></span>
-                    </div>
-                    <div class="field">
-                        <label for="phone">Phone <span class="muted">(optional)</span></label>
-                        <input type="tel" id="phone" name="phone" autocomplete="tel">
-                    </div>
-                    <div class="field">
-                        <label for="message">What needs cleaning?</label>
-                        <textarea id="message" name="message" required data-msg="Please tell us what needs cleaning"></textarea>
-                        <span class="err" id="message-err"></span>
-                    </div>
-                    <button type="submit" class="btn btn-navy btn-lg">Send message</button>
-                </form>
+    hours = "".join(f"<div><dt>{d}</dt><dd>{t}</dd></div>" for d, t in HOURS)
+    body = page_head_block("free quotes", "Contact Bear Carpet Care", trail, slug) + contact_block() + f"""
+    <section class="section">
+        <div class="wrap split top">
+            <div class="split-copy" data-reveal>
+                <span class="eyebrow">when &amp; where</span>
+                <h2>Hours &amp; Service Area</h2>
+                <dl class="hours" style="margin-top:1.5rem">{hours}</dl>
+                <p class="muted" style="margin-top:1.5rem">We serve {', '.join(AREAS[:-1])} and {AREAS[-1]},
+                   and the surrounding Central PA area. Times are Eastern.</p>
             </div>
-
-            <div>
-                <h2 class="rule">Reach us directly</h2>
-                <div class="contact-list">
-                    <a href="{BIZ['phone_href']}">{icon('phone')}<span><small>Call</small><strong>{BIZ['phone_display']}</strong></span></a>
-                    <a href="mailto:{BIZ['email']}">{icon('mail')}<span><small>Email</small><strong>{BIZ['email']}</strong></span></a>
-                    <div>{icon('pin')}<span><small>Based in</small><strong>{BIZ['city']}, {BIZ['region']} {BIZ['zip']}</strong></span></div>
-                </div>
-                <div class="map" style="margin-top:var(--gap)">
-                    <button type="button" data-map="{MAP}">{icon('pin')}<strong>View our service area</strong>
-                        <span>Tap to load the map of Harrisburg, PA</span></button>
-                </div>
+            <div class="map" data-reveal="2">
+                <button type="button" data-map="{MAP}">{icon('marker')}<strong>View our service area</strong>
+                    <span>Tap to load the map of Harrisburg, PA</span></button>
             </div>
         </div>
     </section>
 """
     page = dict(slug=slug, title=f"Contact Us for a Free Quote | {BIZ['name']}",
                 desc="Contact Bear Carpet Care in Harrisburg, PA for carpet, upholstery or rug cleaning. Free quotes, no obligation. Call (717) 454-7347.",
-                preload=[("img/hdr-contact-960.webp", "(max-width: 991px)"),
-                         ("img/hdr-contact-1920.webp", "(min-width: 992px)")],
+                preload=photo_preload(PAGE_PHOTO[slug]),
                 schema=ld(business(), website(), crumbs_ld(slug, trail),
                           webpage(slug, "Contact Bear Carpet Care", ("ContactPage",))))
     return write(slug, page, body, scripts='<script src="js/contact.min.js" defer></script>\n')
@@ -821,24 +982,31 @@ def contact():
 # ---------------------------------------------------------------- 404
 def notfound():
     slug = "404.html"
-    body = f"""    <section class="wrap section">
-        <h1>We couldn't find that page</h1>
-        <p class="lead" style="margin-top:12px">It may have moved, or the link may be out of date.</p>
-        <div class="cols" style="margin-top:var(--section-y)">
-            <a class="note" href="/carpet-cleaning.html"><h3>Carpet Cleaning</h3><p>From $79.95 for two rooms.</p></a>
-            <a class="note" href="/upholstery-cleaning.html"><h3>Upholstery Cleaning</h3><p>Sofas from $79.95.</p></a>
-            <a class="note" href="/oriental-rug-cleaning.html"><h3>Rug Cleaning</h3><p>15% off, free pick-up.</p></a>
+    body = f"""    <section class="cream section notfound">
+        <div class="wrap">
+            <div class="section-head">
+                <span class="eyebrow">page not found</span>
+                <h1>We Couldn't Find That Page</h1>
+                <p>It may have moved, or the link may be out of date.</p>
+            </div>
+            <div class="notes">
+                <a class="note" href="/carpet-cleaning.html">{icon('l-wand')}<h3>Carpet Cleaning</h3><p>From $79.95 for two rooms.</p></a>
+                <a class="note" href="/upholstery-cleaning.html">{icon('l-sofa')}<h3>Upholstery Cleaning</h3><p>Sofas from $79.95.</p></a>
+                <a class="note" href="/oriental-rug-cleaning.html">{icon('l-rug')}<h3>Rug Cleaning</h3><p>15% off, free pick-up.</p></a>
+            </div>
         </div>
     </section>
 
-{cta('Need a quote right now?', 'Free quotes across Harrisburg and Central Pennsylvania.')}"""
+{cta('Need a Quote Right Now?', 'Free quotes across Harrisburg and Central Pennsylvania.')}"""
     page = dict(slug=slug, title=f"Page Not Found | {BIZ['name']}",
                 desc="That page could not be found. Browse carpet, upholstery and rug cleaning in Harrisburg, PA or call (717) 454-7347.",
                 robots="noindex, follow",
                 schema=ld(business(), website()))
     out = head(page) + header("") + body + footer().replace("{scripts}", "")
     # 404 is served from any path, so its links and assets must be absolute
+    out = clean_urls(out)
     out = re.sub(r'(href|src)="(?!https?:|#|/|mailto:|tel:)', r'\1="/', out)
+    out = re.sub(r'(srcset="|, )(img/)', r'\1/\2', out)
     (ROOT / slug).write_text(out)
     return len(re.sub(r"<[^>]+>", " ", out).split())
 

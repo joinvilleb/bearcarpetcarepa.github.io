@@ -6,6 +6,7 @@
  */
 (function () {
   "use strict";
+  window.bccReady = true;
 
   var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var $ = function (s, c) { return (c || document).querySelector(s); };
@@ -16,10 +17,15 @@
   var nav = $("#nav");
 
   function setNav(open) {
-    if (!nav) return;
+    if (!nav || !toggle) return;
     nav.toggleAttribute("data-open", open);
     toggle.setAttribute("aria-expanded", open ? "true" : "false");
+    // The drawer covers the page on small screens, so stop it scrolling underneath.
+    document.body.toggleAttribute("data-locked", open && !desktop.matches);
   }
+
+  var desktop = window.matchMedia("(min-width: 1100px)");
+  desktop.addEventListener("change", function () { setNav(false); });
 
   if (toggle && nav) {
     toggle.addEventListener("click", function () {
@@ -55,20 +61,23 @@
     $$(".has-sub").forEach(function (p) { p.removeAttribute("data-open"); });
   });
 
-  /* --- Back to top --------------------------------------------- */
+  /* --- Header shadow and back to top ---------------------------- */
   var top = $(".to-top");
+  var siteHeader = $(".site-header");
+  var ticking = false;
+  var onScroll = function () {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () {
+      var y = window.pageYOffset;
+      if (top) top.toggleAttribute("data-visible", y > 600);
+      if (siteHeader) siteHeader.toggleAttribute("data-scrolled", y > 8);
+      ticking = false;
+    });
+  };
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
   if (top) {
-    var ticking = false;
-    var onScroll = function () {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(function () {
-        top.toggleAttribute("data-visible", window.pageYOffset > 300);
-        ticking = false;
-      });
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
     top.addEventListener("click", function (e) {
       e.preventDefault();
       window.scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" });
@@ -128,6 +137,59 @@
       mapBtn.parentNode.appendChild(f);
       mapBtn.remove();
     });
+  }
+
+  /* --- Reveal on scroll ----------------------------------------
+   * Sections fade up as they arrive. The "js" class that hides them is
+   * set in <head>; without IntersectionObserver everything shows at once. */
+  var reveals = $$("[data-reveal]");
+  if ("IntersectionObserver" in window && !reduced) {
+    var rio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        en.target.classList.add("in");
+        rio.unobserve(en.target);
+      });
+    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
+    reveals.forEach(function (el) { rio.observe(el); });
+  } else {
+    reveals.forEach(function (el) { el.classList.add("in"); });
+  }
+
+  /* --- Testimonial slider ---------------------------------------
+   * The slides are a native scroll-snap row, so swiping works with no
+   * script. This adds the dots and a gentle auto-advance that stops for
+   * good once someone interacts. */
+  var slider = $(".slider");
+  var dotsBox = $(".dots");
+  if (slider && dotsBox) {
+    var slides = $$(".slide", slider);
+    var current = 0, auto = null;
+    var dots = slides.map(function (_, i) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.setAttribute("aria-label", "Review " + (i + 1) + " of " + slides.length);
+      b.addEventListener("click", function () { stop(); go(i); });
+      dotsBox.appendChild(b);
+      return b;
+    });
+    var mark = function (i) {
+      current = i;
+      dots.forEach(function (d, j) { d.setAttribute("aria-current", j === i ? "true" : "false"); });
+    };
+    var go = function (i) {
+      slider.scrollTo({ left: slides[i].offsetLeft - slider.offsetLeft, behavior: reduced ? "auto" : "smooth" });
+      mark(i);
+    };
+    var stop = function () { if (auto) { clearInterval(auto); auto = null; } };
+    slider.addEventListener("scroll", function () {
+      mark(Math.round(slider.scrollLeft / slider.clientWidth));
+    }, { passive: true });
+    ["pointerdown", "focusin", "wheel", "touchstart"].forEach(function (ev) {
+      slider.addEventListener(ev, stop, { passive: true });
+    });
+    mark(0);
+    if (!reduced) auto = setInterval(function () { go((current + 1) % slides.length); }, 7000);
   }
 
   /* --- Year ------------------------------------------------------ */
