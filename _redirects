@@ -1,0 +1,10 @@
+# Permanent redirects from the old .html addresses to the clean ones, so
+# search engines move any link value across. Cloudflare's own fallback for
+# these is a temporary 307.
+/index.html                  /                         301
+/carpet-cleaning.html        /carpet-cleaning          301
+/upholstery-cleaning.html    /upholstery-cleaning      301
+/oriental-rug-cleaning.html  /oriental-rug-cleaning    301
+/reviews.html                /reviews                  301
+/gallery.html                /gallery                  301
+/contact.html                /contact                  301

@@ -1,0 +1,18 @@
+# Repo files that are not part of the website and should not be served.
+.git
+.gitattributes
+.DS_Store
+**/.DS_Store
+.assetsignore
+wrangler.jsonc
+build-pages.py
+build.sh
+_sprite.html
+README.md
+REDIRECT.md
+LICENSE
+LICENSE.txt
+CNAME
+node_modules
+.gitignore
+.wrangler

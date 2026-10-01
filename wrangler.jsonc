@@ -1,0 +1,14 @@
+// Cloudflare Workers static assets. The site is plain files in the repo
+// root, so there is no build step: Cloudflare uploads the directory as-is.
+// "name" must match the Worker in the Cloudflare dashboard.
+{
+  "name": "bearcarpetcare",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./",
+    // Serve 404.html, with a 404 status, for any path that has no file.
+    "not_found_handling": "404-page",
+    // /contact serves contact.html. /contact.html redirects are in _redirects.
+    "html_handling": "auto-trailing-slash"
+  }
+}
