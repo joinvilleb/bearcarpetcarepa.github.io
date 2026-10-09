@@ -14,7 +14,7 @@ import re
 
 ROOT = pathlib.Path(__file__).parent
 SITE = "https://bearcarpetcare.com"
-TODAY = "2026-10-01"
+TODAY = "2026-10-09"
 
 # ---------------------------------------------------------------- facts
 BIZ = {
@@ -67,9 +67,9 @@ NAV = [
 # Prices as advertised on carpetcleanerharrisburg.com.
 PRICES = [
     dict(name="2 Rooms", amount="79.95", unit="up to 250 sq ft",
-         notes=["Hot-water extraction", "Deodorising included", "Stairs quoted separately"], feature=False),
+         notes=["Hot-water extraction", "Deodorizing included", "Stairs quoted separately"], feature=False),
     dict(name="4 Rooms", amount="149.95", unit="up to 500 sq ft",
-         notes=["Hot-water extraction", "Deodorising included", "Best value per room"], feature=True),
+         notes=["Hot-water extraction", "Deodorizing included", "Best value per room"], feature=True),
     dict(name="Upholstery", amount="39.95", unit="from, per chair",
          notes=["Sofa $79.95", "Love seat $59.95", "Chair $39.95"], feature=False),
     dict(name="Oriental Rugs", amount="15", unit="% off", currency=False,
@@ -470,16 +470,16 @@ def business():
                         "non-toxic, hypoallergenic solutions that are safe for children and pets."),
         "priceRange": "$$",
         "currenciesAccepted": "USD",
-        "paymentAccepted": "Cash, Check, Credit Card",
         "address": {"@type": "PostalAddress", "addressLocality": BIZ["city"],
                     "addressRegion": BIZ["region"], "postalCode": BIZ["zip"], "addressCountry": "US"},
         "geo": {"@type": "GeoCoordinates", "latitude": BIZ["lat"], "longitude": BIZ["lng"]},
         "areaServed": [{"@type": "City", "name": a,
                         "containedInPlace": {"@type": "State", "name": "Pennsylvania"}} for a in AREAS],
         "openingHoursSpecification": HOURS_SCHEMA,
+        "hasMap": "https://maps.app.goo.gl/8CSvEHzdW2A2sdau7",
         "sameAs": [u for _, _, u in SOCIALS],
         "knowsAbout": ["Carpet cleaning", "Hot water extraction", "Upholstery cleaning",
-                       "Oriental rug cleaning", "Area rug repair", "Pet stain and odour removal",
+                       "Oriental rug cleaning", "Area rug repair", "Pet stain and odor removal",
                        "Scotchgard fabric protection"],
         "hasOfferCatalog": {
             "@type": "OfferCatalog", "name": "Cleaning services",
@@ -553,31 +553,31 @@ SERVICES = {
   h2="Deep Cleaning for Every Room",
   h1="Carpet Cleaning in Harrisburg, PA",
   title="Carpet Cleaning in Harrisburg, PA | Bear Carpet Care",
-  desc="Carpet cleaning in Harrisburg, PA from $79.95 for two rooms. Hot-water extraction, stain and pet-odour removal, Scotchgard. Call (717) 454-7347.",
+  desc="Carpet cleaning in Harrisburg, PA from $79.95 for two rooms. Hot-water extraction, stain and pet-odor removal, Scotchgard. Call (717) 454-7347.",
   head_class="head-carpet",
   preload=[("img/hdr-carpet-960.webp", "(max-width: 991px)"), ("img/hdr-carpet-1920.webp", "(min-width: 992px)")],
-  lead="We deep clean wall-to-wall carpet, stairs and hallways across Harrisburg and Central PA, and treat spots, stains and pet odours. <strong>Two rooms from $79.95.</strong>",
+  lead="We deep clean wall-to-wall carpet, stairs and hallways across Harrisburg and Central PA, and treat spots, stains and pet odors. <strong>Two rooms from $79.95.</strong>",
   stats=[("Typical room","20–30 min"),("Whole home","2–4 hours"),("Dry time","6–12 hours"),("From","$79.95")],
-  included=["Wall-to-wall carpet","Hot-water extraction","Spot and stain removal","Pet odour treatment",
-            "Stairs and hallways","Sanitising and deodorising","Scotchgard&reg; protection","Pre-conditioning for heavy soil"],
+  included=["Wall-to-wall carpet","Hot-water extraction","Spot and stain removal","Pet odor treatment",
+            "Stairs and hallways","Sanitizing and deodorizing","Scotchgard&reg; protection","Pre-conditioning for heavy soil"],
   band=("carpet-cleaning-3", 1280, 864, "Hot-water extraction on a living room carpet",
         "Bear Carpet Care cleaning a living room carpet in Harrisburg, PA"),
-  steps=[("We look first","Fibre type, traffic patterns and problem spots get checked before anything is switched on."),
+  steps=[("We look first","Fiber type, traffic patterns and problem spots get checked before anything is switched on."),
          ("Pre-treat the trouble","Heavy soil, spots and pet areas are treated on their own so the main pass is not doing all the work."),
          ("Hot-water extraction","Solution goes in hot and comes straight back out, taking the dirt and the residue with it."),
          ("Protect and dry","Optional Scotchgard&reg;, then airflow so you are walking on it in a few hours.")],
-  notes=[("leaf","Non-toxic throughout","Self-neutralising, biodegradable solutions. Hypoallergenic and safe around children and pets on every job."),
-         ("paw","Pet odour at the source","Surface cleaning does not fix it. We locate the source and treat it with enzymes that neutralise odour at fibre level."),
+  notes=[("leaf","Non-toxic throughout","Self-neutralizing, biodegradable solutions. Hypoallergenic and safe around children and pets on every job."),
+         ("paw","Pet odor at the source","Surface cleaning does not fix it. We locate the source and treat it with enzymes that neutralize odor at fiber level."),
          ("shield","Scotchgard&reg; protection","An invisible barrier that resists dirt and stains and makes routine vacuuming work harder for you.")],
   faqs=[("How often should carpets be professionally cleaned?","Most homes benefit every 12 to 18 months. With pets, children or allergies, every 6 to 12 months. Hallways and living rooms may need it sooner."),
         ("Is it safe for pets and children?","Yes. We use non-toxic, hypoallergenic, biodegradable solutions. No harsh chemicals and no residue left behind."),
         ("How long does it take?","Most rooms take 20 to 30 minutes. A whole home is usually 2 to 4 hours depending on size and condition."),
         ("How long before I can walk on it?","Two to four hours for light traffic, 6 to 12 hours to be fully dry. Opening windows or running a fan speeds it up."),
-        ("Can you remove pet odours?","Yes. Enzyme treatments neutralise odour at the source rather than masking it. We find urine hotspots and treat them directly."),
+        ("Can you remove pet odors?","Yes. Enzyme treatments neutralize odor at the source rather than masking it. We find urine hotspots and treat them directly."),
         ("What does carpet cleaning cost?","Two rooms up to 250 sq ft is $79.95 and four rooms up to 500 sq ft is $149.95. Stairs, hallways and heavily soiled areas are quoted separately.")],
   cta=("Ready for cleaner carpets?","Two rooms from $79.95. Free quotes across Harrisburg and Central PA."),
   stype="Carpet Cleaning",
-  sdesc="Hot-water extraction carpet cleaning, spot and stain removal, pet odour treatment and Scotchgard protection for homes in Harrisburg, PA and Central Pennsylvania.",
+  sdesc="Hot-water extraction carpet cleaning, spot and stain removal, pet odor treatment and Scotchgard protection for homes in Harrisburg, PA and Central Pennsylvania.",
   offers={"@type":"Offer","price":"79.95","priceCurrency":"USD",
           "description":"Two rooms up to 250 square feet","url":f"{SITE}/carpet-cleaning.html"}),
 
@@ -593,17 +593,17 @@ SERVICES = {
   lead="We steam clean sofas, sectionals, chairs, recliners and dining chairs across Harrisburg and Central PA. <strong>Sofas $79.95, chairs from $39.95.</strong>",
   stats=[("Single piece","30–60 min"),("Living room set","2–3 hours"),("Dry time","2–6 hours"),("Sofa","$79.95")],
   included=["Sofas, loveseats and sectionals","Chairs and armchairs","Recliners","Ottomans",
-            "Dining room chairs","Microfibre, cotton, linen and velvet","Scotchgard&reg; protection","Food, drink and pet stains"],
+            "Dining room chairs","Microfiber, cotton, linen and velvet","Scotchgard&reg; protection","Food, drink and pet stains"],
   band=("svc-upholstery", 1280, 608, "Upholstery cleaned and ready to use the same day",
         "A clean upholstered sofa in a Harrisburg, PA living room"),
   steps=[("Fabric test","Every piece is tested first so the method matches the fabric, weave and dyes."),
          ("Dry soil removal","Loose grit comes out first. Left in, it turns to mud the moment moisture is added."),
-         ("Steam clean","Low-moisture extraction lifts embedded dirt, allergens and odour without soaking the padding."),
+         ("Steam clean","Low-moisture extraction lifts embedded dirt, allergens and odor without soaking the padding."),
          ("Groom and dry","Pile is groomed back and airflow brings drying down to a few hours.")],
   notes=[("couch","Safe on delicate pieces","We test first and match the method to the fabric, so antiques and delicate weaves are treated accordingly."),
          ("drop","Stains lifted, not spread","Food, drink and pet stains are treated with solutions matched to the fabric rather than scrubbed."),
          ("shield","Scotchgard&reg; protection","Applied after cleaning so the next spill sits on the surface instead of soaking straight in.")],
-  faqs=[("What furniture do you clean?","Sofas, sectionals, loveseats, armchairs, recliners, ottomans and dining chairs, in microfibre, cotton, linen, velvet and most blends."),
+  faqs=[("What furniture do you clean?","Sofas, sectionals, loveseats, armchairs, recliners, ottomans and dining chairs, in microfiber, cotton, linen, velvet and most blends."),
         ("Is it safe for delicate or antique fabrics?","Yes. We test each piece and choose the method from the fabric type and construction, so freshness is restored without damaging the piece."),
         ("How long does it take?","A single piece takes 30 to 60 minutes and a full living room set 2 to 3 hours. Drying is usually 2 to 6 hours."),
         ("Can you remove coffee, wine or pet stains?","Yes, using solutions matched to the fabric. Results depend on the age and nature of the stain, but most come out well."),
@@ -620,33 +620,33 @@ SERVICES = {
   eyebrow="free pick-up &amp; delivery",
   h2="Rugs Cleaned, Repaired &amp; Restored",
   h1="Oriental &amp; Area Rug Cleaning in Harrisburg, PA",
-  title="Oriental &amp; Area Rug Cleaning in Harrisburg, PA | Bear Carpet Care",
+  title="Oriental &amp; Area Rug Cleaning, Harrisburg PA | Bear Carpet Care",
   desc="Oriental and area rug cleaning in Harrisburg, PA. 15% off with free pick-up and delivery. Repairs in-house. Call (717) 454-7347.",
   head_class="head-rug",
   preload=[("img/hdr-rug2-640.webp", "(max-width: 991px)"), ("img/hdr-rug2-960.webp", "(min-width: 992px)")],
   lead="We clean, repair and restore oriental and area rugs across Harrisburg and Central PA. <strong>15% off, with free pick-up and delivery.</strong>",
-  stats=[("Turnaround","5–7 days"),("Pick-up","Free"),("Fibres","Wool, silk, cotton"),("Offer","15% off")],
+  stats=[("Turnaround","5–7 days"),("Pick-up","Free"),("Fibers","Wool, silk, cotton"),("Offer","15% off")],
   included=["Free pick-up and delivery","Hand and machine cleaning","Oriental, Persian and Turkish",
             "Karastan, Chinese and Indian","Braided, shag and machine-made","Wool, silk, cotton and synthetic",
             "Scotchgard&reg; protection","Full repair service"],
   band=("oriental-rug-cleaning-3", 1024, 929, "Fringes cleaned by hand, off the floor and out of the house",
         "An oriental rug fringe being cleaned by hand at the Bear Carpet Care facility"),
   steps=[("Collected from you","We pick the rug up free of charge and log it in when it reaches the facility."),
-         ("Assessed by fibre","Fibre content, weave and dye stability decide the method. Antique and hand-woven pieces get gentler handling."),
+         ("Assessed by fiber","Fiber content, weave and dye stability decide the method. Antique and hand-woven pieces get gentler handling."),
          ("Dusted, washed, dried","Dry soil comes out first, then a wash matched to the rug, then controlled drying so it keeps its shape."),
          ("Repaired and returned","Fringe or structural work happens before we deliver it back, usually within 5 to 7 days.")],
   notes=[("home","Cleaned off-site","Rugs are cleaned at our facility, not on your floor, so the dirt leaves the building instead of moving around it."),
-         ("shield","Antique-safe handling","Fibre, weave and dye composition are assessed individually. Hand-woven and antique rugs are treated by hand."),
-         ("broom","Full repair service","Reweaving, moth damage, fringe repair and replacement, renapping, colour retouching, serging and binding.")],
+         ("shield","Antique-safe handling","Fiber, weave and dye composition are assessed individually. Hand-woven and antique rugs are treated by hand."),
+         ("broom","Full repair service","Reweaving, moth damage, fringe repair and replacement, renapping, color retouching, serging and binding.")],
   faqs=[("Do you offer free pick-up and delivery?","Yes, free on all rug cleaning in the Harrisburg area. We handle the rug from your door to our facility and back."),
-        ("What types of rug do you clean?","Oriental, Persian, Turkish, Indian, Chinese, Karastan, braided, shag, machine-made and hand-woven, in wool, silk, cotton and synthetic fibres."),
-        ("How long does it take?","Most rugs are cleaned and returned within 5 to 7 business days, depending on size, fibre and any repair work."),
-        ("Do you repair rugs as well?","Yes. Reweaving, moth damage, fringe repair and replacement, renapping, colour retouching, serging, binding and size reduction."),
-        ("Is it safe for antique or valuable rugs?","Yes. Each rug is assessed on fibre content, weave and dye composition first. Antique and hand-woven rugs are treated by hand."),
-        ("What does rug cleaning cost?","Rug cleaning is currently 15% off with free pick-up and delivery. Price depends on size and fibre, so we quote each rug after assessing it.")],
+        ("What types of rug do you clean?","Oriental, Persian, Turkish, Indian, Chinese, Karastan, braided, shag, machine-made and hand-woven, in wool, silk, cotton and synthetic fibers."),
+        ("How long does it take?","Most rugs are cleaned and returned within 5 to 7 business days, depending on size, fiber and any repair work."),
+        ("Do you repair rugs as well?","Yes. Reweaving, moth damage, fringe repair and replacement, renapping, color retouching, serging, binding and size reduction."),
+        ("Is it safe for antique or valuable rugs?","Yes. Each rug is assessed on fiber content, weave and dye composition first. Antique and hand-woven rugs are treated by hand."),
+        ("What does rug cleaning cost?","Rug cleaning is currently 15% off with free pick-up and delivery. Price depends on size and fiber, so we quote each rug after assessing it.")],
   cta=("Ready to restore your rugs?","15% off with free pick-up and delivery across Harrisburg and Central PA."),
   stype="Rug Cleaning",
-  sdesc="Cleaning, repair and restoration of oriental and area rugs in wool, silk, cotton and synthetic fibres, with free pick-up and delivery. Harrisburg, PA and Central Pennsylvania.",
+  sdesc="Cleaning, repair and restoration of oriental and area rugs in wool, silk, cotton and synthetic fibers, with free pick-up and delivery. Harrisburg, PA and Central Pennsylvania.",
   offers={"@type":"Offer","description":"15% off rug cleaning with free pick-up and delivery",
           "url":f"{SITE}/oriental-rug-cleaning.html"}),
 }
@@ -888,11 +888,11 @@ def reviews_page():
     </section>
 
 {cta('Join Them?', 'Free quotes across Harrisburg and Central Pennsylvania.')}"""
-    page = dict(slug=slug, title=f"Customer Reviews | {BIZ['name']}, Harrisburg PA",
+    page = dict(slug=slug, title=f"Carpet Cleaning Reviews, Harrisburg PA | {BIZ['name']}",
                 desc="Read reviews from Bear Carpet Care customers across Harrisburg and Central PA. Carpet, upholstery and rug cleaning, family-owned for over 30 years.",
                 preload=photo_preload(PAGE_PHOTO[slug]),
                 schema=ld(business(), website(), crumbs_ld(slug, trail),
-                          webpage(slug, "Customer Reviews", ("CollectionPage",))))
+                          webpage(slug, "Customer Reviews", ("CollectionPage",), speakable=False)))
     return write(slug, page, body)
 
 
@@ -902,7 +902,7 @@ GALLERY = [
     ("g-sofa", "An upholstered sofa after cleaning"),
     ("g-rugfringe", "Oriental rug fringe cleaned by hand"),
     ("g-facility", "Rugs drying at our cleaning facility"),
-    ("g-pet", "Carpet after pet odour treatment"),
+    ("g-pet", "Carpet after pet odor treatment"),
     ("rug-facility", "Oriental rugs hung to dry after washing"),
 ]
 GALLERY_SRC = {"rug-facility": (640, 1280)}
@@ -938,11 +938,11 @@ def gallery():
     </section>
 
 {cta('Want Yours Looking Like This?', 'Free quotes across Harrisburg and Central Pennsylvania.')}"""
-    page = dict(slug=slug, title=f"Gallery | {BIZ['name']}, Harrisburg PA",
+    page = dict(slug=slug, title=f"Carpet &amp; Rug Cleaning Photos, Harrisburg PA | {BIZ['name']}",
                 preload=photo_preload(PAGE_PHOTO[slug]),
                 desc="Photos of carpet, upholstery and oriental rug cleaning by Bear Carpet Care in Harrisburg, PA and Central Pennsylvania.",
                 schema=ld(business(), website(), crumbs_ld(slug, trail),
-                          webpage(slug, "Our Work", ("CollectionPage",))))
+                          webpage(slug, "Our Work", ("CollectionPage",), speakable=False)))
     return write(slug, page, body)
 
 
@@ -971,11 +971,11 @@ def contact():
         </div>
     </section>
 """
-    page = dict(slug=slug, title=f"Contact Us for a Free Quote | {BIZ['name']}",
+    page = dict(slug=slug, title=f"Free Carpet Cleaning Quote, Harrisburg PA | {BIZ['name']}",
                 desc="Contact Bear Carpet Care in Harrisburg, PA for carpet, upholstery or rug cleaning. Free quotes, no obligation. Call (717) 454-7347.",
                 preload=photo_preload(PAGE_PHOTO[slug]),
                 schema=ld(business(), website(), crumbs_ld(slug, trail),
-                          webpage(slug, "Contact Bear Carpet Care", ("ContactPage",))))
+                          webpage(slug, "Contact Bear Carpet Care", ("ContactPage",), speakable=False)))
     return write(slug, page, body, scripts='<script src="js/contact.min.js" defer></script>\n')
 
 

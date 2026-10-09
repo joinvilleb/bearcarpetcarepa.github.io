@@ -8,3 +8,11 @@
 /reviews.html                /reviews                  301
 /gallery.html                /gallery                  301
 /contact.html                /contact                  301
+# Trailing-slash variants. Cloudflare's auto-trailing-slash answers these with
+# a temporary 307; make them permanent so only one URL per page is indexed.
+/carpet-cleaning/            /carpet-cleaning          301
+/upholstery-cleaning/        /upholstery-cleaning      301
+/oriental-rug-cleaning/      /oriental-rug-cleaning    301
+/reviews/                    /reviews                  301
+/gallery/                    /gallery                  301
+/contact/                    /contact                  301
